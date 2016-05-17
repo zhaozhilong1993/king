@@ -13,6 +13,7 @@
 
 # use by inside model rpc call
 ENGINE_TOPIC = 'engine'
+COLLECTOR_TOPIC = 'collector'
 
 # use by other openstack part call
 LISTENER_TOPIC = 'king-engine-listener'

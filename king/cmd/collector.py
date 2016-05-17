@@ -38,25 +38,25 @@ from king import version
 
 i18n.enable_lazy()
 
-LOG = logging.getLogger('king.engine')
+LOG = logging.getLogger('king.collector')
 
 
 def main():
     # init engine
     logging.register_options(cfg.CONF)
-    cfg.CONF(project='king', prog='king-engine',
+    cfg.CONF(project='king', prog='king-collector',
              version=version.version_info.version_string())
-    logging.setup(cfg.CONF, 'king-engine')
+    logging.setup(cfg.CONF, 'king-collector')
     logging.set_defaults()
     messaging.setup()
 
     config.startup_sanity_check()
 
-    from king.server import service as engine  # noqa
+    from king.server import collector
 
-    profiler.setup('king-engine', cfg.CONF.host)
+    profiler.setup('king-collector', cfg.CONF.host)
     gmr.TextGuruMeditation.setup_autorun(version)
-    srv = engine.EngineService(cfg.CONF.host, rpc_api.ENGINE_TOPIC)
+    srv = collector.CollectorService(cfg.CONF.host, rpc_api.COLLECTOR_TOPIC)
     workers = cfg.CONF.num_engine_workers
     if not workers:
         workers = max(4, processutils.get_worker_count())
