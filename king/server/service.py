@@ -358,6 +358,16 @@ class EngineService(service.Service):
         result['valume'] = valume_object.Valume.get_all(cnxt)
         return result
 
+    @context.request_context
+    def list_default_quota(self, cnxt):
+        result = {}
+        valume_quota = cfg.CONF.cinder_valume
+        result['valume'] = {
+            'valume_num':valume_quota.valume_num,
+            'valume_size':valume_quota.valume_size
+        }
+        return result
+
 
     def service_manage_report(self):
         cnxt = context.get_admin_context()

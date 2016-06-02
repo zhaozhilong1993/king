@@ -220,6 +220,18 @@ auth_password_opts = [
                        'multi_cloud is enabled. At least one endpoint needs '
                        'to be specified.'))]
 
+# these options define the default quota of cinder valume
+cinder_valume_opts = [
+    cfg.IntOpt('valume_num',
+               default=10,
+               help=_('The max num of cinder valume can be created.Default is 10.')),
+    cfg.StrOpt('valume_size',
+               default=102400,
+               help=_('The max MB of cinder valume can be created.Default is 102400 (100GB).')),
+]
+cinder_valume_group = cfg.OptGroup('cinder_valume')
+
+
 # these options define baseline defaults that apply to all clients
 default_clients_opts = [
     cfg.StrOpt('endpoint_type',
@@ -239,24 +251,6 @@ default_clients_opts = [
                 help=_("If set, then the server's certificate will not "
                        "be verified."))]
 
-# these options can be defined for each client
-# they must not specify defaults, since any options not defined in a client
-# specific group is looked up on the generic group above
-clients_opts = [
-    cfg.StrOpt('endpoint_type',
-               help=_(
-                   'Type of endpoint in Identity service catalog to use '
-                   'for communication with the OpenStack service.')),
-    cfg.StrOpt('ca_file',
-               help=_('Optional CA cert file to use in SSL connections.')),
-    cfg.StrOpt('cert_file',
-               help=_('Optional PEM-formatted certificate chain file.')),
-    cfg.StrOpt('key_file',
-               help=_('Optional PEM-formatted file that contains the '
-                      'private key.')),
-    cfg.BoolOpt('insecure',
-                help=_("If set, then the server's certificate will not "
-                       "be verified."))]
 
 king_client_opts = [
     cfg.StrOpt('url',
@@ -299,17 +293,14 @@ def list_opts():
     yield profiler_group.name, profiler_opts
     yield 'clients', default_clients_opts
 
-    for client in ('nova', 'swift', 'neutron', 'cinder',
-                   'ceilometer', 'keystone', 'king', 'glance', 'trove',
-                   'sahara'):
-        client_specific_group = 'clients_' + client
-        yield client_specific_group, clients_opts
+    yield cinder_valume_group.name, cinder_valume_opts
 
     yield 'clients_king', king_client_opts
     yield 'clients_keystone', keystone_client_opts
     yield 'clients_nova', client_http_log_debug_opts
     yield 'clients_cinder', client_http_log_debug_opts
 
+cfg.CONF.register_group(cinder_valume_group)
 
 cfg.CONF.register_group(paste_deploy_group)
 cfg.CONF.register_group(auth_password_group)

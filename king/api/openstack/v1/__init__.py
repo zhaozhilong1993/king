@@ -89,14 +89,20 @@ class API(wsgi.Router):
                 # path_prefix='/{tenant_id}',
                 path_prefix='',
                 routes=[
-                    # Template handling
                     {
                         'name': 'quota_list',
                         'url': '/quota',
                         'action': 'list',
                         'method': 'GET'
                     },
+                    {
+                        'name': 'quota_list_default',
+                        'url': '/quota/default',
+                        'action': 'list_default',
+                        'method': 'GET'
+                    }
                 ])
+
 
         # now that all the routes are defined, add a handler for
         super(API, self).__init__(mapper)

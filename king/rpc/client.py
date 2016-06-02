@@ -69,3 +69,13 @@ class EngineClient(object):
         :param user: the quota of this user
         """
         return self.call(ctxt, self.make_msg('list_quota'), version='1.0')
+
+
+    def list_default_quota(self, ctxt):
+        """Returns the full quota.
+
+        :param ctxt: RPC context.
+        :param user: the quota of this user
+        """
+        return self.call(ctxt, self.make_msg('list_default_quota'), version='1.0')
+

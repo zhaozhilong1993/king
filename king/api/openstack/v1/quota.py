@@ -48,6 +48,14 @@ class QuotaController(object):
         return res
 
 
+    @util.policy_enforce
+    def list_default(self, req):
+        """get all quota"""
+        res = self.rpc_client.list_default_quota(
+        req.context,
+        )
+        return res
+
 def create_resource(options):
     """Stacks resource factory method."""
     deserializer = wsgi.JSONRequestDeserializer()
