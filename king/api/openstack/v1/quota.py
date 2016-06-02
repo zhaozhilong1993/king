@@ -20,40 +20,31 @@ from king.common import serializers
 from king.common import wsgi
 
 from king.db import api as db_api
+from king.rpc import api as rpc_api
+from king.rpc import client as rpc_client
+
 
 LOG = logging.getLogger(__name__)
 
 
-class UserController(object):
+class QuotaController(object):
     """WSGI controller for stacks resource in King v1 API.
 
     Implements the API actions.
     """
     # Define request scope (must match what is in policy.json)
-    REQUEST_SCOPE = 'users'
+    REQUEST_SCOPE = 'quota'
 
     def __init__(self, options):
         self.options = options
-        self.rpc_client = None
+        self.rpc_client = rpc_client.EngineClient()
 
     @util.policy_enforce
     def list(self, req):
-        """get all use"""
-        res = db_api.db_get_user(req.context, 'demo')
-        return res
-
-
-    @util.policy_enforce
-    def create(self, req):
-        """create a user"""
-        import pdb
-        pdb.set_trace()
-        user = {
-            'user_name': 'demo',
-            'user_email': 'test@email.com'
-        }
-
-        res = db_api.db_add_user(req.context, user)
+        """get all quota"""
+        res = self.rpc_client.list_quota(
+        req.context,
+        )
         return res
 
 
@@ -61,4 +52,4 @@ def create_resource(options):
     """Stacks resource factory method."""
     deserializer = wsgi.JSONRequestDeserializer()
     serializer = serializers.JSONResponseSerializer()
-    return wsgi.Resource(UserController(options), deserializer, serializer)
+    return wsgi.Resource(QuotaController(options), deserializer, serializer)

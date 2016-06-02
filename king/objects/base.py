@@ -17,6 +17,6 @@
 from oslo_versionedobjects import base as ovoo_base
 
 
-class HeatObject(ovoo_base.VersionedObject):
+class KingObject(ovoo_base.VersionedObject):
     OBJ_PROJECT_NAMESPACE = 'heat'
     VERSION = '1.0'

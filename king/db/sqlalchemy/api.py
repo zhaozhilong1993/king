@@ -82,26 +82,6 @@ def db_version(engine):
     return migration.db_version(engine)
 
 
-def db_get_user(context, user_name):
-    """Do everything you want in here"""
-    query = model_query(context, models.User)
-    res = query.filter_by(user_name=user_name).all()
-    return res
-
-
-def db_add_user(context, user):
-    """Do everything you want in here"""
-    ctxt = context.to_dict()
-    user_id = ctxt['user_id']
-    session = get_session()
-    with session.begin():
-        session.add(models.User(
-            user_id = user_id,
-            user_name=user['user_name'],
-            user_email=user['user_email']
-        ))
-
-
 def service_create(context, values):
     session = get_session()
     service = models.Service()
@@ -141,4 +121,10 @@ def service_get_all_by_args(context, host, process, hostname):
     res = query.filter_by(host=host,
                           hostname=hostname,
                           process=process).all()
+    return res
+
+
+def valume_quota_get_all(context):
+    query = model_query(context, models.Valume)
+    res = query.filter_by().all()
     return res

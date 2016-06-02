@@ -27,18 +27,15 @@ import six
 import datetime
 
 from king.common import context
+from king.rpc import api as rpc_api
 from king.objects import service as service_object
+from king.objects import valume as valume_object
 
 from king.common.i18n import _LE
 from king.common.i18n import _LI
 from king.common.i18n import _LW
 from king.common import messaging as rpc_messaging
 from king.common import policy
-
-
-from king.rpc import api as rpc_api
-
-
 
 
 LOG = logging.getLogger(__name__)
@@ -354,7 +351,14 @@ class EngineService(service.Service):
     def reset(self):
         super(EngineService, self).reset()
         logging.setup(cfg.CONF, 'king')
-        
+
+    @context.request_context
+    def list_quota(self, cnxt):
+        result = {}
+        result['valume'] = valume_object.Valume.get_all(cnxt)
+        return result
+
+
     def service_manage_report(self):
         cnxt = context.get_admin_context()
 
@@ -376,7 +380,7 @@ class EngineService(service.Service):
         try:
             # update the service info, cause will use in service_manage_cleanup
             service_object.Service.update_by_id(cnxt,
-                                                service_ref['id'],
+                                                self.service_id,
                                                 dict(deleted_at=None))
         except Exception as ex:
             LOG.error(_LE('Service %(service_id)s update '

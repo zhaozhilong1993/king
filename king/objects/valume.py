@@ -21,19 +21,16 @@ from king.db import api as db_api
 from king.objects import base as king_base
 
 
-class Service(
+class Valume(
         king_base.KingObject,
         base.VersionedObjectDictCompat,
         base.ComparableVersionedObject,
 ):
     fields = {
         'id': fields.StringField(),
-        'engine_id': fields.StringField(),
-        'host': fields.StringField(),
-        'hostname': fields.StringField(),
-        'process': fields.StringField(),
-        'topic': fields.StringField(),
-        'report_interval': fields.IntegerField(),
+        'user_id': fields.StringField(),
+        'valume_num': fields.IntegerField(),
+        'valume_size': fields.StringField(),
         'created_at': fields.DateTimeField(read_only=True),
         'updated_at': fields.DateTimeField(nullable=True),
         'deleted_at': fields.DateTimeField(nullable=True)
@@ -54,39 +51,24 @@ class Service(
                 for obj in list_obj]
 
     @classmethod
-    def get_by_id(cls, context, service_id):
-        service_db = db_api.service_get(context, service_id)
-        service = cls._from_db_object(context, cls(), service_db)
-        return service
-
-    @classmethod
     def create(cls, context, values):
         return cls._from_db_object(
             context,
             cls(),
-            db_api.service_create(context, values))
+            db_api.valume_create(context, values))
 
     @classmethod
-    def update_by_id(cls, context, service_id, values):
+    def update_by_id(cls, context, user_id, values):
         return cls._from_db_object(
             context,
             cls(),
-            db_api.service_update(context, service_id, values))
+            db_api.valume_update(context, service_id, values))
 
     @classmethod
-    def delete(cls, context, service_id, soft_delete=True):
-        db_api.service_delete(context, service_id, soft_delete)
+    def delete(cls, context, user_id, soft_delete=True):
+        db_api.valume_delete(context, service_id, soft_delete)
 
     @classmethod
     def get_all(cls, context):
         return cls._from_db_objects(context,
-                                    db_api.service_get_all(context))
-
-    @classmethod
-    def get_all_by_args(cls, context, host, process, hostname):
-        return cls._from_db_objects(
-            context,
-            db_api.service_get_all_by_args(context,
-                                           host,
-                                           process,
-                                           hostname))
+                                    db_api.valume_quota_get_all(context))

@@ -42,16 +42,6 @@ def db_version(engine):
     return IMPL.db_version(engine)
 
 
-def db_get_user(context, user_name):
-    """Do everything you want in here"""
-    return IMPL.db_get_user(context, user_name)
-
-
-def db_add_user(context, user):
-    """Do everything you want in here"""
-    return IMPL.db_add_user(context, user)
-
-
 def service_create(context, values):
     return IMPL.service_create(context, values)
 
@@ -70,3 +60,7 @@ def service_delete(context, service_id, soft_delete):
 
 def service_get_all_by_args(context, host, process, hostname):
     return IMPL.service_get_all_by_args(context, host, process, hostname)
+
+
+def valume_quota_get_all(context):
+    return IMPL.valume_quota_get_all(context)

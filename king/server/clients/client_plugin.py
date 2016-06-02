@@ -11,8 +11,12 @@
 #    License for the specific language governing permissions and limitations
 #    under the License.
 
-# use by inside model rpc call
-ENGINE_TOPIC = 'server'
+import abc
+import six
 
-# use by other openstack part call
-LISTENER_TOPIC = 'king-server-listener'
+
+@six.add_metaclass(abc.ABCMeta)
+class ClientPlugin(object):
+   def __init__(self):
+        pass
+

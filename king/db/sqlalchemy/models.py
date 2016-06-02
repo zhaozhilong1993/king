@@ -81,18 +81,6 @@ class KingBase(models.ModelBase, models.TimestampMixin):
         session.commit()
 
 
-class User(BASE, KingBase):
-    """Represents a stack created by the heat engine."""
-    __tablename__ = 'user'
-    __table_args__ = (
-        sqlalchemy.Index('ix_user_user_id', 'user_id'),
-    )
-    id = sqlalchemy.Column(sqlalchemy.Integer, primary_key=True)
-    user_id = sqlalchemy.Column(sqlalchemy.String(255), nullable=False)
-    user_name = sqlalchemy.Column(sqlalchemy.String(64), nullable=False, unique=True)
-    user_email = sqlalchemy.Column(sqlalchemy.String(255))
-
-
 class Service(BASE, KingBase, SoftDelete):
 
     __tablename__ = 'service'
@@ -119,3 +107,22 @@ class Service(BASE, KingBase, SoftDelete):
     report_interval = sqlalchemy.Column('report_interval',
                                         sqlalchemy.Integer,
                                         nullable=False)
+
+
+class Valume(BASE, KingBase, SoftDelete):
+
+    __tablename__ = 'valume'
+
+    id = sqlalchemy.Column('id',
+                           sqlalchemy.String(36),
+                           primary_key=True,
+                           default=lambda: str(uuid.uuid4()))
+    user_id = sqlalchemy.Column('user_id',
+                                sqlalchemy.String(36),
+                                nullable=False)
+    valume_num = sqlalchemy.Column('valume_num',
+                                  sqlalchemy.Integer(),
+                                  nullable=True)
+    valume_size = sqlalchemy.Column('valume_size',
+                                 sqlalchemy.String(255),
+                                 nullable=True)

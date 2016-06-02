@@ -11,8 +11,19 @@
 #    License for the specific language governing permissions and limitations
 #    under the License.
 
-# use by inside model rpc call
-ENGINE_TOPIC = 'server'
+from cinderclient import client as cc
+from cinderclient import exceptions
+from keystoneclient import exceptions as ks_exceptions
+from oslo_log import log as logging
 
-# use by other openstack part call
-LISTENER_TOPIC = 'king-server-listener'
+from king.common import exception
+from king.server.clients import client_plugin
+
+
+LOG = logging.getLogger(__name__)
+
+CLIENT_NAME = 'cinder'
+
+class BaseCinder(client_plugin.ClientPlugin):
+    def create_valume(self):
+        pass

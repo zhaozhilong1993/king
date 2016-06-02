@@ -1,5 +1,4 @@
 {
   "context_is_admin": "role:admin",
-  "users:list": "",
-  "users:create": ""
+  "quota:list": ""
 }

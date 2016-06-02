@@ -15,7 +15,7 @@ import routes
 import six
 
 from king.common import wsgi
-from king.api.openstack.v1 import users
+from king.api.openstack.v1 import quota
 
 
 class API(wsgi.Router):
@@ -83,24 +83,18 @@ class API(wsgi.Router):
                                    allowed_methods=allowed_methods_str,
                                    conditions={'method': 'OPTIONS'})
 
-        # Stacks
-        users_resource = users.create_resource(conf)
-        connect(controller=users_resource,
+        # quota
+        quotas_resource = quota.create_resource(conf)
+        connect(controller=quotas_resource,
                 # path_prefix='/{tenant_id}',
                 path_prefix='',
                 routes=[
                     # Template handling
                     {
-                        'name': 'user_list',
-                        'url': '/users',
+                        'name': 'quota_list',
+                        'url': '/quota',
                         'action': 'list',
                         'method': 'GET'
-                    },
-                    {
-                        'name': 'user_create',
-                        'url': '/users',
-                        'action': 'create',
-                        'method': 'POST'
                     },
                 ])
 
