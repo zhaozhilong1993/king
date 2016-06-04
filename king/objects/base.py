@@ -12,11 +12,11 @@
 #    License for the specific language governing permissions and limitations
 #    under the License.
 
-"""Heat common internal object model"""
+"""King common internal object model"""
 
 from oslo_versionedobjects import base as ovoo_base
 
 
 class KingObject(ovoo_base.VersionedObject):
-    OBJ_PROJECT_NAMESPACE = 'heat'
+    OBJ_PROJECT_NAMESPACE = 'king'
     VERSION = '1.0'

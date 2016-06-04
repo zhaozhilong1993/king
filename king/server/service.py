@@ -368,6 +368,27 @@ class EngineService(service.Service):
         }
         return result
 
+    @context.request_context
+    def update_quota(self, cnxt, body):
+        def valume_quota_format(valume_object):
+            quota = {}
+            for field in valume_object.fields:
+                quota[field] = valume_object[field]
+            return quota
+
+        result = {}
+        user = body.get('user')
+        user_id = user.get('user_id')
+
+        valume_quota = body.get('valume')
+        if valume_quota:
+            result['valume'] = valume_quota_format(
+                                    valume_object.Valume.update_by_id(cnxt,
+                                                                      user_id,
+                                                                      valume_quota)
+                                    )
+        return result
+
 
     def service_manage_report(self):
         cnxt = context.get_admin_context()

@@ -46,8 +46,8 @@ def service_create(context, values):
     return IMPL.service_create(context, values)
 
 
-def service_update(context, service_id, value):
-    return IMPL.service_update(context, service_id, value)
+def service_update(context, service_id, values):
+    return IMPL.service_update(context, service_id, values)
 
 
 def service_get(context, service_id):
@@ -64,3 +64,6 @@ def service_get_all_by_args(context, host, process, hostname):
 
 def valume_quota_get_all(context):
     return IMPL.valume_quota_get_all(context)
+
+def valume_quota_update(context, user_id, values):
+    return IMPL.valume_quota_update(context, user_id, values)

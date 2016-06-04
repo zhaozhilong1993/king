@@ -11,9 +11,12 @@
 #    License for the specific language governing permissions and limitations
 #    under the License.
 
-"""Stack endpoint for King v1 REST API."""
+"""quota endpoint for King v1 REST API."""
 
 from oslo_log import log as logging
+from webob import exc
+import six
+import json
 
 from king.api.openstack.v1 import util
 from king.common import serializers
@@ -23,6 +26,7 @@ from king.db import api as db_api
 from king.rpc import api as rpc_api
 from king.rpc import client as rpc_client
 
+from king.common.i18n import _
 
 LOG = logging.getLogger(__name__)
 
@@ -55,6 +59,27 @@ class QuotaController(object):
         req.context,
         )
         return res
+
+
+    @util.policy_enforce
+    def update_quota(self, req):
+        """update valume quota"""
+        body_str = req.body
+        try:
+            body = json.loads(body_str)
+        except ValueError as ex:
+            msg = _("Post data is not supported: %s") % ex
+            raise exc.HTTPBadRequest(six.text_type(msg))
+
+        if not body.get('user'):
+            msg = _("User keyword can not be found in the parsed JSON string.")
+            raise exc.HTTPBadRequest(six.text_type(msg))
+
+        res = self.rpc_client.update_quota(
+                req.context,
+                body)
+        return res
+
 
 def create_resource(options):
     """Stacks resource factory method."""

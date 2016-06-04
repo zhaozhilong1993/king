@@ -100,6 +100,12 @@ class API(wsgi.Router):
                         'url': '/quota/default',
                         'action': 'list_default',
                         'method': 'GET'
+                    },
+                    {
+                        'name': 'update_quota',
+                        'url': '/quota',
+                        'action': 'update_quota',
+                        'method': 'POST'
                     }
                 ])
 

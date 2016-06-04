@@ -66,16 +66,25 @@ class EngineClient(object):
         """Returns the full quota.
 
         :param ctxt: RPC context.
-        :param user: the quota of this user
         """
         return self.call(ctxt, self.make_msg('list_quota'), version='1.0')
 
 
     def list_default_quota(self, ctxt):
-        """Returns the full quota.
+        """Returns the full quota of default.
 
         :param ctxt: RPC context.
-        :param user: the quota of this user
         """
         return self.call(ctxt, self.make_msg('list_default_quota'), version='1.0')
+
+
+    def update_quota(self, ctxt, body):
+        """update the quota of cinder valume
+
+        :param ctxt: RPC context.
+        :param body: the quota info of this user
+        """
+        return self.call(ctxt, self.make_msg('update_quota',
+                                            body=body),
+                        version='1.0')
 

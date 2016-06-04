@@ -37,13 +37,13 @@ class Valume(
     }
 
     @staticmethod
-    def _from_db_object(context, service, db_service):
+    def _from_db_object(context, valume, db_valume):
         '''once we finish database action, we need to format the result'''
-        for field in service.fields:
-            service[field] = db_service[field]
-        service._context = context
-        service.obj_reset_changes()
-        return service
+        for field in valume.fields:
+            valume[field] = db_valume[field]
+        valume._context = context
+        valume.obj_reset_changes()
+        return valume
 
     @classmethod
     def _from_db_objects(cls, context, list_obj):
@@ -62,7 +62,7 @@ class Valume(
         return cls._from_db_object(
             context,
             cls(),
-            db_api.valume_update(context, service_id, values))
+            db_api.valume_quota_update(context, user_id, values))
 
     @classmethod
     def delete(cls, context, user_id, soft_delete=True):
