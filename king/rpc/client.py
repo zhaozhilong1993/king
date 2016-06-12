@@ -79,7 +79,7 @@ class EngineClient(object):
 
 
     def update_quota(self, ctxt, body):
-        """update the quota of cinder valume
+        """update the quota of cinder volume
 
         :param ctxt: RPC context.
         :param body: the quota info of this user
@@ -88,3 +88,13 @@ class EngineClient(object):
                                             body=body),
                         version='1.0')
 
+
+    def create_volume(self, ctxt, body):
+        """update the quota of cinder volume
+
+        :param ctxt: RPC context.
+        :param body: the POST body info
+        """
+        return self.call(ctxt, self.make_msg('create_volume',
+                                            body=body),
+                        version='1.0')

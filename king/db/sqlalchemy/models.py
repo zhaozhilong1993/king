@@ -109,9 +109,9 @@ class Service(BASE, KingBase, SoftDelete):
                                         nullable=False)
 
 
-class Valume(BASE, KingBase, SoftDelete):
+class Volume(BASE, KingBase, SoftDelete):
 
-    __tablename__ = 'valume'
+    __tablename__ = 'volume'
 
     id = sqlalchemy.Column('id',
                            sqlalchemy.String(36),
@@ -120,9 +120,9 @@ class Valume(BASE, KingBase, SoftDelete):
     user_id = sqlalchemy.Column('user_id',
                                 sqlalchemy.String(36),
                                 nullable=False)
-    valume_num = sqlalchemy.Column('valume_num',
+    volume_num = sqlalchemy.Column('volume_num',
                                   sqlalchemy.Integer(),
                                   nullable=True)
-    valume_size = sqlalchemy.Column('valume_size',
+    volume_size = sqlalchemy.Column('volume_size',
                                  sqlalchemy.String(255),
                                  nullable=True)

@@ -2,5 +2,7 @@
   "context_is_admin": "role:admin",
   "quota:list": "",
   "quota:list_default": "",
-  "quota:update_quota": ""
+  "quota:update_quota": "",
+
+  "volume:create": ""
 }

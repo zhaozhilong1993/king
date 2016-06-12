@@ -21,7 +21,7 @@ from king.db import api as db_api
 from king.objects import base as king_base
 
 
-class Valume(
+class Volume(
         king_base.KingObject,
         base.VersionedObjectDictCompat,
         base.ComparableVersionedObject,
@@ -29,21 +29,21 @@ class Valume(
     fields = {
         'id': fields.StringField(),
         'user_id': fields.StringField(),
-        'valume_num': fields.IntegerField(),
-        'valume_size': fields.StringField(),
+        'volume_num': fields.IntegerField(),
+        'volume_size': fields.StringField(),
         'created_at': fields.DateTimeField(read_only=True),
         'updated_at': fields.DateTimeField(nullable=True),
         'deleted_at': fields.DateTimeField(nullable=True)
     }
 
     @staticmethod
-    def _from_db_object(context, valume, db_valume):
+    def _from_db_object(context, volume, db_volume):
         '''once we finish database action, we need to format the result'''
-        for field in valume.fields:
-            valume[field] = db_valume[field]
-        valume._context = context
-        valume.obj_reset_changes()
-        return valume
+        for field in volume.fields:
+            volume[field] = db_volume[field]
+        volume._context = context
+        volume.obj_reset_changes()
+        return volume
 
     @classmethod
     def _from_db_objects(cls, context, list_obj):
@@ -55,20 +55,20 @@ class Valume(
         return cls._from_db_object(
             context,
             cls(),
-            db_api.valume_create(context, values))
+            db_api.volume_create(context, values))
 
     @classmethod
     def update_by_id(cls, context, user_id, values):
         return cls._from_db_object(
             context,
             cls(),
-            db_api.valume_quota_update(context, user_id, values))
+            db_api.volume_quota_update(context, user_id, values))
 
     @classmethod
     def delete(cls, context, user_id, soft_delete=True):
-        db_api.valume_delete(context, service_id, soft_delete)
+        db_api.volume_delete(context, service_id, soft_delete)
 
     @classmethod
     def get_all(cls, context):
         return cls._from_db_objects(context,
-                                    db_api.valume_quota_get_all(context))
+                                    db_api.volume_quota_get_all(context))

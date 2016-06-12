@@ -31,45 +31,21 @@ from king.common.i18n import _
 LOG = logging.getLogger(__name__)
 
 
-class QuotaController(object):
-    """WSGI controller for quota resource in King v1 API.
+class VolumeController(object):
+    """WSGI controller for volume resource in King v1 API.
 
     Implements the API actions.
     """
     # Define request scope (must match what is in policy.json)
-    REQUEST_SCOPE = 'quota'
+    REQUEST_SCOPE = 'volume'
 
     def __init__(self, options):
         self.options = options
         self.rpc_client = rpc_client.EngineClient()
 
-
     @util.policy_enforce
-    def index(self, req):
-        """get all quota"""
-        return {}
-
-    @util.policy_enforce
-    def list(self, req):
-        """get all quota"""
-        res = self.rpc_client.list_quota(
-        req.context,
-        )
-        return res
-
-
-    @util.policy_enforce
-    def list_default(self, req):
-        """get all quota"""
-        res = self.rpc_client.list_default_quota(
-        req.context,
-        )
-        return res
-
-
-    @util.policy_enforce
-    def update_quota(self, req):
-        """update volume quota"""
+    def create(self, req):
+        """create cinder volume"""
         body_str = req.body
         try:
             body = json.loads(body_str)
@@ -77,18 +53,25 @@ class QuotaController(object):
             msg = _("Post data is not supported: %s") % ex
             raise exc.HTTPBadRequest(six.text_type(msg))
 
-        if not body.get('user'):
-            msg = _("User keyword can not be found in the parsed JSON string.")
+        if not body.has_key('volume'):
+            msg = _("Post data is not supported: key volume not found")
             raise exc.HTTPBadRequest(six.text_type(msg))
+        else :
+            try:
+                if body['volume']['size'] is None:
+                    msg = _("Post data is not supported: key volume size can not be None")
+                    raise exc.HTTPBadRequest(six.text_type(msg))
+            except KeyError as ex:
+                msg = _("Post data is not supported: key volume size can not be found")
+                raise exc.HTTPBadRequest(six.text_type(msg))
 
-        res = self.rpc_client.update_quota(
-                req.context,
-                body)
+        res = self.rpc_client.create_volume(req.context,
+                                            body)
         return res
 
 
 def create_resource(options):
-    """quota resource factory method."""
+    """volume resource factory method."""
     deserializer = wsgi.JSONRequestDeserializer()
     serializer = serializers.JSONResponseSerializer()
-    return wsgi.Resource(QuotaController(options), deserializer, serializer)
+    return wsgi.Resource(VolumeController(options), deserializer, serializer)

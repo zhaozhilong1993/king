@@ -20,22 +20,22 @@ def upgrade(migrate_engine):
     meta = sqlalchemy.MetaData()
     meta.bind = migrate_engine
 
-    valume = sqlalchemy.Table(
-        'valume', meta,
+    volume = sqlalchemy.Table(
+        'volume', meta,
         sqlalchemy.Column('id', sqlalchemy.String(36), primary_key=True,
                           default=lambda: str(uuid.uuid4())),
         sqlalchemy.Column('created_at', sqlalchemy.DateTime),
         sqlalchemy.Column('updated_at', sqlalchemy.DateTime),
         sqlalchemy.Column('deleted_at', sqlalchemy.DateTime),
         sqlalchemy.Column('user_id', sqlalchemy.String(255), nullable=False,index=True),
-        sqlalchemy.Column('valume_num', sqlalchemy.Integer, nullable=True),
-        sqlalchemy.Column('valume_size', sqlalchemy.String(255), nullable=True),
+        sqlalchemy.Column('volume_num', sqlalchemy.Integer, nullable=True),
+        sqlalchemy.Column('volume_size', sqlalchemy.String(255), nullable=True),
         mysql_engine='InnoDB',
         mysql_charset='utf8',
     )
 
     tables = (
-        valume,
+        volume,
     )
 
     for index, table in enumerate(tables):

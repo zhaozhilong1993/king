@@ -29,13 +29,16 @@ import datetime
 from king.common import context
 from king.rpc import api as rpc_api
 from king.objects import service as service_object
-from king.objects import valume as valume_object
+from king.objects import volume as volume_object
 
 from king.common.i18n import _LE
 from king.common.i18n import _LI
 from king.common.i18n import _LW
 from king.common import messaging as rpc_messaging
 from king.common import policy
+
+from king.server import volume
+from king.server import clients
 
 
 LOG = logging.getLogger(__name__)
@@ -355,39 +358,61 @@ class EngineService(service.Service):
     @context.request_context
     def list_quota(self, cnxt):
         result = {}
-        result['valume'] = valume_object.Valume.get_all(cnxt)
+        result['volume'] = volume_object.Volume.get_all(cnxt)
         return result
 
     @context.request_context
     def list_default_quota(self, cnxt):
         result = {}
-        valume_quota = cfg.CONF.cinder_valume
-        result['valume'] = {
-            'valume_num':valume_quota.valume_num,
-            'valume_size':valume_quota.valume_size
+        volume_quota = cfg.CONF.cinder_volume
+        result['volume'] = {
+            'volume_num':volume_quota.volume_num,
+            'volume_size':volume_quota.volume_size
         }
         return result
 
     @context.request_context
-    def update_quota(self, cnxt, body):
-        def valume_quota_format(valume_object):
+    def update_quota(self, cnxt, info):
+
+        def _volume_quota_format(volume_object):
             quota = {}
-            for field in valume_object.fields:
-                quota[field] = valume_object[field]
+            for field in volume_object.fields:
+                quota[field] = volume_object[field]
             return quota
 
         result = {}
-        user = body.get('user')
+        user = info.get('user')
         user_id = user.get('user_id')
 
-        valume_quota = body.get('valume')
-        if valume_quota:
-            result['valume'] = valume_quota_format(
-                                    valume_object.Valume.update_by_id(cnxt,
+        volume_quota = info.get('volume')
+        if volume_quota:
+            result['volume'] = _volume_quota_format(
+                                    volume_object.Volume.update_by_id(cnxt,
                                                                       user_id,
-                                                                      valume_quota)
+                                                                      volume_quota)
                                     )
         return result
+
+
+    @context.request_context
+    def create_volume(self, cnxt, body):
+        # create volume
+        info = body['volume']
+
+        arg = {}
+        arg['size'] = int(info.get('size'))
+        arg['snapshot_id'] = info.get('snapshot_id')
+        arg['display_name'] = info.get('name')
+        arg['display_description'] = info.get('description')
+        arg['volume_type'] = info.get('volume_type')
+        arg['user_id'] = info.get('user_id')
+        arg['project_id'] = info.get('project_id')
+        arg['availability_zone'] = info.get('availability_zone')
+        arg['metadata'] = info.get('metadata')
+        arg['imageRef'] = info.get('imageRef')
+        arg['source_volid'] = info.get('source_volid')
+
+        return volume.Volume(cnxt).create(arg)
 
 
     def service_manage_report(self):
@@ -438,3 +463,4 @@ class EngineService(service.Service):
                 # maybe service is dead
                 LOG.info("service engine %s is dead or in some bad status"% service_ref['engine_id'])
                 service_object.Service.delete(cnxt, service_ref['id'])
+

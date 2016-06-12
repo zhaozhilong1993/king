@@ -220,20 +220,20 @@ auth_password_opts = [
                        'multi_cloud is enabled. At least one endpoint needs '
                        'to be specified.'))]
 
-# these options define the default quota of cinder valume
-cinder_valume_opts = [
-    cfg.IntOpt('valume_num',
+# these options define the default quota of cinder volume
+cinder_volume_opts = [
+    cfg.IntOpt('volume_num',
                default=10,
-               help=_('The max num of cinder valume can be created.Default is 10.')),
-    cfg.StrOpt('valume_size',
+               help=_('The max num of cinder volume can be created.Default is 10.')),
+    cfg.StrOpt('volume_size',
                default=102400,
-               help=_('The max MB of cinder valume can be created.Default is 102400 (100GB).')),
+               help=_('The max MB of cinder volume can be created.Default is 102400 (100GB).')),
 ]
-cinder_valume_group = cfg.OptGroup('cinder_valume')
+cinder_volume_group = cfg.OptGroup('cinder_volume')
 
 
 # these options define baseline defaults that apply to all clients
-default_clients_opts = [
+clients_opts = [
     cfg.StrOpt('endpoint_type',
                default='publicURL',
                help=_(
@@ -291,16 +291,24 @@ def list_opts():
     yield auth_password_group.name, auth_password_opts
     yield revision_group.name, revision_opts
     yield profiler_group.name, profiler_opts
-    yield 'clients', default_clients_opts
+    yield 'clients', clients_opts
 
-    yield cinder_valume_group.name, cinder_valume_opts
+    yield cinder_volume_group.name, cinder_volume_opts
+
+    for client in ('barbican', 'ceilometer', 'cinder', 'designate', 'glance',
+                    'heat', 'keystone', 'magnum', 'manila', 'mistral',
+                    'neutron', 'nova', 'sahara', 'senlin', 'swift', 'trove',
+                    'zaqar'
+                    ):
+        client_specific_group = 'clients_' + client
+        yield client_specific_group, clients_opts
 
     yield 'clients_king', king_client_opts
     yield 'clients_keystone', keystone_client_opts
     yield 'clients_nova', client_http_log_debug_opts
     yield 'clients_cinder', client_http_log_debug_opts
 
-cfg.CONF.register_group(cinder_valume_group)
+cfg.CONF.register_group(cinder_volume_group)
 
 cfg.CONF.register_group(paste_deploy_group)
 cfg.CONF.register_group(auth_password_group)
@@ -388,3 +396,18 @@ def get_client_option(client, option):
     # look for the option in the generic [clients] section
     cfg.CONF.import_opt(option, 'king.common.config', group='clients')
     return getattr(cfg.CONF.clients, option)
+
+
+def get_ssl_options(client):
+    # Look for the ssl options in the [clients_${client}] section
+    cacert = get_client_option(client, 'ca_file')
+    insecure = get_client_option(client, 'insecure')
+    cert = get_client_option(client, 'cert_file')
+    key = get_client_option(client, 'key_file')
+    if insecure:
+        verify = False
+    else:
+        verify = cacert or True
+    if cert and key:
+        cert = (cert, key)
+    return {'verify': verify, 'cert': cert}

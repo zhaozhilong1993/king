@@ -124,33 +124,33 @@ def service_get_all_by_args(context, host, process, hostname):
     return res
 
 
-def valume_quota_get(context, user_id):
-    query = model_query(context, models.Valume)
+def volume_quota_get(context, user_id):
+    query = model_query(context, models.Volume)
     res = query.filter_by(user_id=user_id).first()
     return res
 
 
-def valume_quota_get_all(context):
-    query = model_query(context, models.Valume)
+def volume_quota_get_all(context):
+    query = model_query(context, models.Volume)
     res = query.filter_by().all()
     return res
 
 
-def valume_quota_create(context, user_id, values):
+def volume_quota_create(context, user_id, values):
     session = get_session()
-    valume_quota = models.Valume()
+    volume_quota = models.Volume()
     values['user_id'] = user_id
-    valume_quota.update(values)
-    valume_quota.save(session)
-    return valume_quota
+    volume_quota.update(values)
+    volume_quota.save(session)
+    return volume_quota
 
 
-def valume_quota_update(context, user_id, values):
+def volume_quota_update(context, user_id, values):
     values.update({'updated_at': timeutils.utcnow()})
-    valume_quota = valume_quota_get(context, user_id)
-    if valume_quota:
-        valume_quota.update(values)
-        valume_quota.save(_session(context))
+    volume_quota = volume_quota_get(context, user_id)
+    if volume_quota:
+        volume_quota.update(values)
+        volume_quota.save(_session(context))
     else :
-        valume_quota = valume_quota_create(context, user_id, values)
-    return valume_quota
+        volume_quota = volume_quota_create(context, user_id, values)
+    return volume_quota

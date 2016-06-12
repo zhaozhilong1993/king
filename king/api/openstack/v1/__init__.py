@@ -16,6 +16,7 @@ import six
 
 from king.common import wsgi
 from king.api.openstack.v1 import quota
+from king.api.openstack.v1 import volume
 
 
 class API(wsgi.Router):
@@ -109,6 +110,17 @@ class API(wsgi.Router):
                     }
                 ])
 
-
+        volume_resource = volume.create_resource(conf)
+        connect(controller=volume_resource,
+                # path_prefix='/{tenant_id}',
+                path_prefix='',
+                routes=[
+                    {
+                        'name': 'create_volume',
+                        'url': '/volume',
+                        'action': 'create',
+                        'method': 'POST'
+                    },
+                ])
         # now that all the routes are defined, add a handler for
         super(API, self).__init__(mapper)
