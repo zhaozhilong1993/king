@@ -116,6 +116,11 @@ def service_delete(context, service_id, soft_delete):
             session.delete(service)
 
 
+def service_get_all(context):
+    return (model_query(context, models.Service).
+            filter_by(deleted_at=None).all())
+
+
 def service_get_all_by_args(context, host, process, hostname):
     query = model_query(context, models.Service)
     res = query.filter_by(host=host,

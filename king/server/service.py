@@ -28,7 +28,7 @@ import datetime
 
 from king.common import context
 from king.rpc import api as rpc_api
-from king.objects import service as service_object
+from king.objects import services as services_object
 from king.objects import volume as volume_object
 
 from king.common.i18n import _LE
@@ -36,6 +36,7 @@ from king.common.i18n import _LI
 from king.common.i18n import _LW
 from king.common import messaging as rpc_messaging
 from king.common import policy
+from king.common import service_utils
 
 from king.server import volume
 from king.server import clients
@@ -356,6 +357,12 @@ class EngineService(service.Service):
         logging.setup(cfg.CONF, 'king')
 
     @context.request_context
+    def list_services(self, cnxt):
+        result = [service_utils.format_service(srv)
+                  for srv in services_object.Service.get_all(cnxt)]
+        return result
+
+    @context.request_context
     def list_quota(self, cnxt):
         result = {}
         result['volume'] = volume_object.Volume.get_all(cnxt)
@@ -419,7 +426,7 @@ class EngineService(service.Service):
         cnxt = context.get_admin_context()
 
         if self.service_id is None:
-            service_ref = service_object.Service.create(
+            service_ref = services_object.Service.create(
                 cnxt,
                 values={
                     'host': self.host,
@@ -450,7 +457,7 @@ class EngineService(service.Service):
         last_update_window = (3 * cfg.CONF.periodic_interval)
         last_update_time = timeutils.utcnow() - datetime.timedelta(seconds=last_update_window)
 
-        service_refs = service_object.Service.get_all_by_args(cnxt,
+        service_refs = services_object.Service.get_all_by_args(cnxt,
                                                               self.host,
                                                               self.process,
                                                               self.hostname)
@@ -462,5 +469,5 @@ class EngineService(service.Service):
             if service_ref['updated_at'] < last_update_time:
                 # maybe service is dead
                 LOG.info("service engine %s is dead or in some bad status"% service_ref['engine_id'])
-                service_object.Service.delete(cnxt, service_ref['id'])
+                services_object.Service.delete(cnxt, service_ref['id'])
 

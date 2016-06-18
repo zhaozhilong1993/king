@@ -17,6 +17,7 @@ import six
 from king.common import wsgi
 from king.api.openstack.v1 import quota
 from king.api.openstack.v1 import volume
+from king.api.openstack.v1 import services
 
 
 class API(wsgi.Router):
@@ -83,6 +84,19 @@ class API(wsgi.Router):
                                    action='options',
                                    allowed_methods=allowed_methods_str,
                                    conditions={'method': 'OPTIONS'})
+        # service
+        services_resource = services.create_resource(conf)
+        connect(controller=services_resource,
+                path_prefix='',
+                routes=[
+                    {
+                        'name': 'services_list',
+                        'url': '/services',
+                        'action': 'list',
+                        'method': 'GET'
+                    }
+                ]
+        )
 
         # quota
         quotas_resource = quota.create_resource(conf)

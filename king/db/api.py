@@ -54,6 +54,10 @@ def service_get(context, service_id):
     return IMPL.service_get(context, service_id)
 
 
+def service_get_all(context):
+    return IMPL.service_get_all(context)
+
+
 def service_delete(context, service_id, soft_delete):
     return IMPL.service_delete(context, service_id, soft_delete)
 

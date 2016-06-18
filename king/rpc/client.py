@@ -98,3 +98,12 @@ class EngineClient(object):
         return self.call(ctxt, self.make_msg('create_volume',
                                             body=body),
                         version='1.0')
+
+
+    def list_services(self, ctxt):
+        """list the services
+        :param ctxt: RPC context.
+        """
+        return self.call(ctxt, self.make_msg('list_services'),
+                         version='1.0')
+
