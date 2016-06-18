@@ -345,7 +345,7 @@ class EngineService(service.Service):
         ctxt = context.get_admin_context()
 
         # here should change the status of Service in databases
-        # service_objects.Service.delete(ctxt, self.service_id)
+        # services_objects.Service.delete(ctxt, self.service_id)
         LOG.info(_LI('Service %s is deleted'), self.service_id)
 
         # Terminate the engine process
@@ -442,7 +442,7 @@ class EngineService(service.Service):
 
         try:
             # update the service info, cause will use in service_manage_cleanup
-            service_object.Service.update_by_id(cnxt,
+            services_object.Service.update_by_id(cnxt,
                                                 self.service_id,
                                                 dict(deleted_at=None))
         except Exception as ex:
