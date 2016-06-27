@@ -380,6 +380,7 @@ class EngineService(service.Service):
         result = {}
         tmp = []
         volume = volume_object.Volume.show(cnxt, body['user_id'])
+
         if volume is not None:
             tmp.append(service_utils._volume_quota_format(volume))
             result['volume'] = tmp
@@ -393,7 +394,7 @@ class EngineService(service.Service):
         result = {}
         volume_quota = cfg.CONF.cinder_volume
         result['volume'] = [{
-            'user_id':'*',
+            'user_id':'default',
             'volume_num':volume_quota.volume_num,
             'volume_size':volume_quota.volume_size,
             'updated_at':'-'

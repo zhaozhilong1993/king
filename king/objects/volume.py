@@ -20,6 +20,7 @@ from oslo_versionedobjects import fields
 from king.db import api as db_api
 from king.objects import base as king_base
 
+from king.common import exception
 
 class Volume(
         king_base.KingObject,
@@ -41,6 +42,7 @@ class Volume(
         '''once we finish database action, we need to format the result'''
         for field in volume.fields:
             volume[field] = db_volume[field]
+
         volume._context = context
         volume.obj_reset_changes()
         return volume
@@ -75,7 +77,10 @@ class Volume(
 
     @classmethod
     def show(cls, context, user_id):
+        db_volume = db_api.volume_quota_get(context, user_id)
+        if db_volume is None:
+            return None
         return cls._from_db_object(
             context,
             cls(),
-            db_api.volume_quota_get(context, user_id))
+            db_volume)
