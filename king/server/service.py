@@ -358,42 +358,42 @@ class EngineService(service.Service):
 
     @context.request_context
     def list_services(self, cnxt):
-        result = [service_utils.format_service(srv)
+        result = {}
+        services_list = [service_utils.format_service(srv)
                   for srv in services_object.Service.get_all(cnxt)]
+        result['services'] = services_list
         return result
 
     @context.request_context
     def list_quota(self, cnxt):
         result = {}
-        result['volume'] = volume_object.Volume.get_all(cnxt)
+        tmp = []
+        for volume in volume_object.Volume.get_all(cnxt):
+            tmp.append(service_utils._volume_quota_format(volume))
+        result['volume'] = tmp
         return result
 
     @context.request_context
     def list_default_quota(self, cnxt):
         result = {}
         volume_quota = cfg.CONF.cinder_volume
-        result['volume'] = {
+        result['volume'] = [{
+            'user_id':'*',
             'volume_num':volume_quota.volume_num,
-            'volume_size':volume_quota.volume_size
-        }
+            'volume_size':volume_quota.volume_size,
+            'updated_at':'-'
+        }]
         return result
 
     @context.request_context
-    def update_quota(self, cnxt, info):
-
-        def _volume_quota_format(volume_object):
-            quota = {}
-            for field in volume_object.fields:
-                quota[field] = volume_object[field]
-            return quota
+    def update_quota(self, cnxt, body):
 
         result = {}
-        user = info.get('user')
-        user_id = user.get('user_id')
+        user_id = body.get('user').get('user_id')
 
-        volume_quota = info.get('volume')
+        volume_quota = body.get('volume')
         if volume_quota:
-            result['volume'] = _volume_quota_format(
+            result['volume'] = service_utils._volume_quota_format(
                                     volume_object.Volume.update_by_id(cnxt,
                                                                       user_id,
                                                                       volume_quota)
