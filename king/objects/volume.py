@@ -72,3 +72,10 @@ class Volume(
     def get_all(cls, context):
         return cls._from_db_objects(context,
                                     db_api.volume_quota_get_all(context))
+
+    @classmethod
+    def show(cls, context, user_id):
+        return cls._from_db_object(
+            context,
+            cls(),
+            db_api.volume_quota_get(context, user_id))

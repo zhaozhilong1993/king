@@ -69,5 +69,10 @@ def service_get_all_by_args(context, host, process, hostname):
 def volume_quota_get_all(context):
     return IMPL.volume_quota_get_all(context)
 
+
 def volume_quota_update(context, user_id, values):
     return IMPL.volume_quota_update(context, user_id, values)
+
+
+def volume_quota_get(context, user_id):
+    return IMPL.volume_quota_get(context, user_id)

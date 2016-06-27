@@ -364,6 +364,7 @@ class EngineService(service.Service):
         result['services'] = services_list
         return result
 
+
     @context.request_context
     def list_quota(self, cnxt):
         result = {}
@@ -372,6 +373,20 @@ class EngineService(service.Service):
             tmp.append(service_utils._volume_quota_format(volume))
         result['volume'] = tmp
         return result
+
+
+    @context.request_context
+    def show_quota(self, cnxt, body):
+        result = {}
+        tmp = []
+        volume = volume_object.Volume.show(cnxt, body['user_id'])
+        if volume is not None:
+            tmp.append(service_utils._volume_quota_format(volume))
+            result['volume'] = tmp
+        else:
+            result['volume'] = self.list_default_quota(cnxt)['volume']
+        return result
+
 
     @context.request_context
     def list_default_quota(self, cnxt):
