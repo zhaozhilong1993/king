@@ -26,9 +26,11 @@ class ClientPlugin(object):
 
     _get_client_option = staticmethod(config.get_client_option)
 
-    def __init__(self, context):
+    def __init__(self, context, client=None):
         self._context = weakref.ref(context)
         self._keystone_session_obj = None
+        self.king = None
+        self.client = client
 
 
     @property

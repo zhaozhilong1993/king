@@ -480,3 +480,17 @@ class SIGHUPInterrupt(KingException):
 
 class NoActionRequired(Exception):
     pass
+
+
+class QuotaNotEnough(KingException):
+    msg_fmt = _("Your %(quota)s is not enough.")
+
+    def __init__(self, quota='None'):
+        super(QuotaNotEnough, self).__init__(quota=quota)
+
+
+class DBDataNotFound(KingException):
+    msg_fmt = _("Database data is not found.")
+
+    def __init__(self):
+        super(QuotaNotEnough, self).__init__()

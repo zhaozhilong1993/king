@@ -21,10 +21,12 @@ class Volume(object):
         self.client = cinder.BaseCinder(context)
 
     def _volume_format(self, volume):
-        res = {}
-        res['id'] = volume.id
-        res['name'] = volume.name
-        res['links'] = volume.links
+        res = {'volume':[]}
+        tmp = {}
+        tmp['id'] = volume.id
+        tmp['name'] = volume.name
+        tmp['links'] = volume.links
+        res['volume'].append(tmp)
         return res
 
     def list(self):

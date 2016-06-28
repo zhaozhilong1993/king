@@ -127,7 +127,7 @@ class API(wsgi.Router):
                         'url': '/quota/detail',
                         'action': 'show',
                         'method': 'POST'
-                    }
+                    },
                 ])
 
         volume_resource = volume.create_resource(conf)

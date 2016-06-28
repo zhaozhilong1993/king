@@ -44,7 +44,7 @@ class VolumeController(object):
         self.rpc_client = rpc_client.EngineClient()
 
     @util.policy_enforce
-    def create(self, req):
+    def create(self, req, body):
         """create cinder volume"""
         body_str = req.body
         try:

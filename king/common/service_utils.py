@@ -19,7 +19,6 @@ SERVICE_KEYS = (
     SERVICE_ID,
     SERVICE_HOST,
     SERVICE_HOSTNAME,
-    SERVICE_BINARY,
     SERVICE_TOPIC,
     SERVICE_ENGINE_ID,
     SERVICE_REPORT_INTERVAL,
@@ -31,7 +30,6 @@ SERVICE_KEYS = (
     'id',
     'host',
     'hostname',
-    'binary',
     'topic',
     'engine_id',
     'report_interval',
@@ -58,7 +56,6 @@ def format_service(service):
 
     result = {
         SERVICE_ID: service.id,
-        SERVICE_BINARY: service.binary,
         SERVICE_ENGINE_ID: service.engine_id,
         SERVICE_HOST: service.host,
         SERVICE_HOSTNAME: service.hostname,
@@ -70,3 +67,10 @@ def format_service(service):
         SERVICE_STATUS: status
     }
     return result
+
+def _volume_quota_format(volume_object):
+    quota = {}
+    for field in volume_object.fields:
+        quota[field] = volume_object[field]
+    return quota
+

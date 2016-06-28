@@ -18,7 +18,7 @@ from oslo_log import log as logging
 
 from king.common import exception
 from king.server.clients import client_plugin
-
+from king.server.clients.os.cking import BaseKing as cking
 
 LOG = logging.getLogger(__name__)
 
@@ -27,7 +27,6 @@ CLIENT_VERSION = '1'
 
 class BaseCinder(client_plugin.ClientPlugin):
     service_types = [VOLUME, VOLUME_V2] = ['volume', 'volumev2']
-
 
 
     def get_volume_api_version(self):
@@ -66,7 +65,6 @@ class BaseCinder(client_plugin.ClientPlugin):
         management_url = self.url_for(service_type=service_type,
                                       endpoint_type=endpoint_type)
 
-
         args = {
             'service_type': service_type,
             'auth_url': con.auth_url or '',
@@ -87,6 +85,11 @@ class BaseCinder(client_plugin.ClientPlugin):
 
 
     def create_volume(self, body):
-        client = self.authenticated_client()
-        res = client.volumes.create(**body)
+        cclient = self.authenticated_client()
+        # inition king
+        self.king = cking(self.context, client=cclient)
+
+        if self.king.check_volumes_quotas(body) is False:
+            raise exception.QuotaNotEnough('volume')
+        res = cclient.volumes.create(**body)
         return res

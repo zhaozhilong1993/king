@@ -46,23 +46,15 @@ class QuotaController(object):
 
     @util.policy_enforce
     def list(self, req):
-        """show user quota"""
-        body_str = req.body
-        try:
-            body = json.loads(body_str)
-        except ValueError as ex:
-            msg = _("Post data is not supported: %s") % ex
-            raise exc.HTTPBadRequest(six.text_type(msg))
-
-        res = self.rpc_client.show_quota(
+        """get all quota"""
+        res = self.rpc_client.list_quota(
         req.context,
-        body,
         )
         return res
 
 
     @util.policy_enforce
-    def show(self, req):
+    def show(self, req, body):
         """get all quota"""
         body_str = req.body
         try:
