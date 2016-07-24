@@ -126,3 +126,17 @@ class Volume(BASE, KingBase, SoftDelete):
     volume_size = sqlalchemy.Column('volume_size',
                                  sqlalchemy.String(255),
                                  nullable=True)
+
+
+class Test(BASE, KingBase, SoftDelete):
+    __tablename__ = 'Test'
+
+    id = sqlalchemy.Column('id',
+                           sqlalchemy.String(36),
+                           primary_key=True,
+                           default=lambda: str(uuid.uuid4()))
+    amount = sqlalchemy.Column('amount',
+                                sqlalchemy.DECIMAL(7, 2))
+    tr_date = sqlalchemy.Column('tr_date',
+                                sqlalchemy.Integer(),
+                                primary_key=True)
