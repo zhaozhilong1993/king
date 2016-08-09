@@ -2,8 +2,8 @@
 King
 ====
 
-King is a quota system, which is designed to be compatible with the allocation of resources 
-for all of the large service platforms.Currently mainly used for OpenStack platform quota docking.
+King is a media compressed system.
+
 
 Getting Started
 ---------------
@@ -17,3 +17,10 @@ Python client
 -------------
 https://github.com/zhaozhilong1993/python-kingclient
 
+
+Use Api 
+-------------
+/v1/condense 
+/v1/enqueue
+/v1/out
+/v1/{meida_id}/status
