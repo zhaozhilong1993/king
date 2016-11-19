@@ -109,9 +109,32 @@ class Service(BASE, KingBase, SoftDelete):
                                         nullable=False)
 
 
-class Volume(BASE, KingBase, SoftDelete):
+class Order(BASE, KingBase, SoftDelete):
+    __tablename__ = 'order'
 
-    __tablename__ = 'volume'
+    id = sqlalchemy.Column('id',
+                           sqlalchemy.String(36),
+                           primary_key=True,
+                           default=lambda: str(uuid.uuid4()))
+    resource_id = sqlalchemy.Column('resource_id',
+                                sqlalchemy.String(36),
+                                nullable=False)
+    account_id = sqlalchemy.Column('account_id',
+                                  sqlalchemy.String(36),
+                                  nullable=False)
+    price_id = sqlalchemy.Column('price_id',
+                                 sqlalchemy.String(36),
+                                 nullable=False)
+    order_status = sqlalchemy.Column('order_status',
+                                 sqlalchemy.String(255),
+                                 nullable=True)
+    order_type = sqlalchemy.Column('order_type',
+                                 sqlalchemy.String(255),
+                                 nullable=True)
+
+
+class Account(BASE, KingBase, SoftDelete):
+    __tablename__ = 'account'
 
     id = sqlalchemy.Column('id',
                            sqlalchemy.String(36),
@@ -120,23 +143,90 @@ class Volume(BASE, KingBase, SoftDelete):
     user_id = sqlalchemy.Column('user_id',
                                 sqlalchemy.String(36),
                                 nullable=False)
-    volume_num = sqlalchemy.Column('volume_num',
-                                  sqlalchemy.Integer(),
+    account_money = sqlalchemy.Column('account_money',
+                                  sqlalchemy.String(36),
                                   nullable=True)
-    volume_size = sqlalchemy.Column('volume_size',
+    account_level = sqlalchemy.Column('account_level',
+                                 sqlalchemy.Integer,
+                                 nullable=True)
+    account_password = sqlalchemy.Column('account_password',
                                  sqlalchemy.String(255),
                                  nullable=True)
 
 
-class Test(BASE, KingBase, SoftDelete):
-    __tablename__ = 'Test'
+class Price(BASE, KingBase, SoftDelete):
+    __tablename__ = 'price'
 
     id = sqlalchemy.Column('id',
                            sqlalchemy.String(36),
                            primary_key=True,
                            default=lambda: str(uuid.uuid4()))
-    amount = sqlalchemy.Column('amount',
-                                sqlalchemy.DECIMAL(7, 2))
-    tr_date = sqlalchemy.Column('tr_date',
-                                sqlalchemy.Integer(),
-                                primary_key=True)
+    price_type = sqlalchemy.Column('price_type',
+                                sqlalchemy.String(36),
+                                nullable=False)
+    resource_id = sqlalchemy.Column('resource_id',
+                                sqlalchemy.String(36),
+                                nullable=False)
+    order_type = sqlalchemy.Column('order_type',
+                                  sqlalchemy.String(36),
+                                  nullable=True)
+    price_num = sqlalchemy.Column('price_num',
+                                 sqlalchemy.String(36),
+                                 nullable=True)
+
+
+class Order_acction_record(BASE, KingBase, SoftDelete):
+    __tablename__ = 'order_acction_record'
+
+    id = sqlalchemy.Column('id',
+                           sqlalchemy.String(36),
+                           primary_key=True,
+                           default=lambda: str(uuid.uuid4()))
+    order_id = sqlalchemy.Column('order_id',
+                                sqlalchemy.String(36),
+                                nullable=False)
+    order_status_now = sqlalchemy.Column('order_status_now',
+                                  sqlalchemy.String(255),
+                                  nullable=True)
+    order_status_change_to = sqlalchemy.Column('order_status_change_to',
+                                 sqlalchemy.String(255),
+                                 nullable=True)
+
+
+class Pay_record(BASE, KingBase, SoftDelete):
+    __tablename__ = 'pay_record'
+
+    id = sqlalchemy.Column('id',
+                           sqlalchemy.String(36),
+                           primary_key=True,
+                           default=lambda: str(uuid.uuid4()))
+    order_id = sqlalchemy.Column('order_id',
+                                sqlalchemy.String(36),
+                                nullable=False)
+    account_id = sqlalchemy.Column('account_id',
+                                  sqlalchemy.String(36),
+                                  nullable=False)
+    pay_action = sqlalchemy.Column('pay_action',
+                                 sqlalchemy.String(255),
+                                 nullable=True)
+    pay = sqlalchemy.Column('pay',
+                                 sqlalchemy.Integer,
+                                 nullable=True)
+    recharge = sqlalchemy.Column('recharge',
+                                 sqlalchemy.Integer,
+                                 nullable=True)
+
+
+class Crontab(BASE, KingBase, SoftDelete):
+    __tablename__ = 'Crontab'
+
+    id = sqlalchemy.Column('id',
+                           sqlalchemy.String(36),
+                           primary_key=True,
+                           default=lambda: str(uuid.uuid4()))
+    order_id = sqlalchemy.Column('order_id',
+                                sqlalchemy.String(36),
+                                nullable=False)
+    cron_at = sqlalchemy.Column('cron_at',
+                                 sqlalchemy.DateTime,
+                                 nullable=True)
