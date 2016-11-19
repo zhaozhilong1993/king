@@ -64,3 +64,11 @@ def service_delete(context, service_id, soft_delete):
 
 def service_get_all_by_args(context, host, process, hostname):
     return IMPL.service_get_all_by_args(context, host, process, hostname)
+
+
+def order_create(context, value):
+    return IMPL.order_create(context, value)
+
+
+def order_update(context, value):
+    return IMPL.order_update(context, value)

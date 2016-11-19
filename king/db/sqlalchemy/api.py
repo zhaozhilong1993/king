@@ -128,3 +128,32 @@ def service_get_all_by_args(context, host, process, hostname):
                           hostname=hostname,
                           process=process).all()
     return res
+
+
+def order_get(context, resource_id, order_id=None):
+    query = model_query(context, models.Order)
+    if order_id:
+      res = query.get(order_id)
+    else:
+      res = query.get(resource_id)
+    if res is None:
+        LOG.error(_LE('resouce_id : %s do not have a order' % resource_id))
+        raise exception.EntityNotFound(entity='Order', name=resource_id)
+    return res
+
+
+def create_order(context, value):
+    session = get_session()
+    order = models.Order()
+    order.update(value)
+    order.save(session)
+    return order
+
+
+def update_order(context, value):
+    resource_id = value['resource_id']
+    value.update({'updated_at': timeutils.utcnow()})
+    order = order_get(context, resource_id)
+    order.update(value)
+    order.save(_session(context))
+    return order
