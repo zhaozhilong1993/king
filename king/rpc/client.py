@@ -62,52 +62,6 @@ class EngineClient(object):
         return client.cast(ctxt, method, **kwargs)
 
 
-    def list_quota(self, ctxt):
-        """Returns the full quota.
-
-        :param ctxt: RPC context.
-        """
-        return self.call(ctxt, self.make_msg('list_quota'), version='1.0')
-
-
-    def show_quota(self, ctxt, body):
-        """Returns the user quota.
-
-        :param ctxt: RPC context.
-        """
-        return self.call(ctxt, self.make_msg('show_quota', body=body), version='1.0')
-
-
-    def list_default_quota(self, ctxt):
-        """Returns the full quota of default.
-
-        :param ctxt: RPC context.
-        """
-        return self.call(ctxt, self.make_msg('list_default_quota'), version='1.0')
-
-
-    def update_quota(self, ctxt, body):
-        """update the quota of cinder volume
-
-        :param ctxt: RPC context.
-        :param body: the quota info of this user
-        """
-        return self.call(ctxt, self.make_msg('update_quota',
-                                            body=body),
-                        version='1.0')
-
-
-    def create_volume(self, ctxt, body):
-        """update the quota of cinder volume
-
-        :param ctxt: RPC context.
-        :param body: the POST body info
-        """
-        return self.call(ctxt, self.make_msg('create_volume',
-                                            body=body),
-                        version='1.0')
-
-
     def list_services(self, ctxt):
         """list the services
         :param ctxt: RPC context.
