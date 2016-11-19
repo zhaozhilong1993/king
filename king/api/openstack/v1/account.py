@@ -31,13 +31,13 @@ from king.common.i18n import _
 LOG = logging.getLogger(__name__)
 
 
-class VolumeController(object):
-    """WSGI controller for volume resource in King v1 API.
+class AccountController(object):
+    """WSGI controller for account resource in King v1 API.
 
     Implements the API actions.
     """
     # Define request scope (must match what is in policy.json)
-    REQUEST_SCOPE = 'volume'
+    REQUEST_SCOPE = 'account'
 
     def __init__(self, options):
         self.options = options
@@ -45,33 +45,31 @@ class VolumeController(object):
 
     @util.policy_enforce
     def create(self, req, body):
-        """create cinder volume"""
-        body_str = req.body
-        try:
-            body = json.loads(body_str)
-        except ValueError as ex:
-            msg = _("Post data is not supported: %s") % ex
-            raise exc.HTTPBadRequest(six.text_type(msg))
+        pass
 
-        if not body.has_key('volume'):
-            msg = _("Post data is not supported: key volume not found")
-            raise exc.HTTPBadRequest(six.text_type(msg))
-        else :
-            try:
-                if body['volume']['size'] is None:
-                    msg = _("Post data is not supported: key volume size can not be None")
-                    raise exc.HTTPBadRequest(six.text_type(msg))
-            except KeyError as ex:
-                msg = _("Post data is not supported: key volume size can not be found")
-                raise exc.HTTPBadRequest(six.text_type(msg))
 
-        res = self.rpc_client.create_volume(req.context,
-                                            body)
-        return res
+    @util.policy_enforce
+    def list(self, req, body):
+        pass
+
+
+    @util.policy_enforce
+    def recharge(self, req, body):
+        pass
+
+
+    @util.policy_enforce
+    def update_level(self, req, body):
+        pass
+
+
+    @util.policy_enforce
+    def update_password(self, req, body):
+        pass
 
 
 def create_resource(options):
-    """volume resource factory method."""
+    """account resource factory method."""
     deserializer = wsgi.JSONRequestDeserializer()
     serializer = serializers.JSONResponseSerializer()
-    return wsgi.Resource(VolumeController(options), deserializer, serializer)
+    return wsgi.Resource(AccountController(options), deserializer, serializer)

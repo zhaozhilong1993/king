@@ -15,8 +15,8 @@ import routes
 import six
 
 from king.common import wsgi
-from king.api.openstack.v1 import quota
-from king.api.openstack.v1 import volume
+from king.api.openstack.v1 import order
+from king.api.openstack.v1 import account
 from king.api.openstack.v1 import services
 
 
@@ -98,49 +98,99 @@ class API(wsgi.Router):
                 ]
         )
 
-        # quota
-        quotas_resource = quota.create_resource(conf)
-        connect(controller=quotas_resource,
+        # order
+        orders_resource = order.create_resource(conf)
+        connect(controller=orders_resource,
                 # path_prefix='/{tenant_id}',
                 path_prefix='',
                 routes=[
                     {
-                        'name': 'quota_list',
-                        'url': '/quota',
+                        'name': 'order_list',
+                        'url': '/order',
                         'action': 'list',
                         'method': 'GET'
                     },
                     {
-                        'name': 'quota_list_default',
-                        'url': '/quota/default',
-                        'action': 'list_default',
+                        'name': 'order_create',
+                        'url': '/order',
+                        'action': 'create',
+                        'method': 'POST'
+                    },
+                    {
+                        'name': 'order_show',
+                        'url': '/order/{order_name}',
+                        'action': 'show',
                         'method': 'GET'
                     },
                     {
-                        'name': 'update_quota',
-                        'url': '/quota',
-                        'action': 'update_quota',
+                        'name': 'order_status_update',
+                        'url': '/order/{order_name}',
+                        'action': 'update_status',
                         'method': 'POST'
-                    },
-                    {
-                        'name': 'quota_show',
-                        'url': '/quota/detail',
-                        'action': 'show',
-                        'method': 'POST'
-                    },
+                    }
                 ])
 
-        volume_resource = volume.create_resource(conf)
-        connect(controller=volume_resource,
+        # account
+        account_resource = account.create_resource(conf)
+        connect(controller=account_resource,
                 # path_prefix='/{tenant_id}',
                 path_prefix='',
                 routes=[
                     {
-                        'name': 'create_volume',
-                        'url': '/volume',
+                        'name': 'create_account',
+                        'url': '/account',
                         'action': 'create',
                         'method': 'POST'
                     },
+                    {
+                        'name': 'list_account',
+                        'url': '/account',
+                        'action': 'list',
+                        'method': 'GET'
+                    },
+                    {
+                        'name': 'recharge_account',
+                        'url': '/account/{account_name}/recharge',
+                        'action': 'recharge',
+                        'method': 'POST'
+                    },
+                    {
+                        'name': 'update_account_level',
+                        'url': '/account/{account_name}/level',
+                        'action': 'update_level',
+                        'method': 'POST'
+                    },
+                    {
+                        'name': 'update_account_password',
+                        'url': '/account/{account_name}/password',
+                        'action': 'update_password',
+                        'method': 'POST'
+                    },
+                ])
+
+        # price
+        prices_resource = price.create_resource(conf)
+        connect(controller=prices_resource,
+                path_prefix='',
+                routes=[
+                    {
+                        'name': 'price_list',
+                        'url': '/price',
+                        'action': 'list',
+                        'method': 'GET'
+                    },
+                    {
+                        'name': 'priec_create',
+                        'url': '/price',
+                        'action': 'create',
+                        'method': 'POST'
+                    },
+                    {
+                        'name': 'price_update',
+                        'url': '/price/{price_name}',
+                        'action': 'update_price',
+                        'method': 'POST'
+                    }
                 ])
         # now that all the routes are defined, add a handler for
         super(API, self).__init__(mapper)
