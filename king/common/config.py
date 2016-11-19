@@ -18,9 +18,7 @@ from eventlet.green import socket
 from oslo_config import cfg
 from oslo_log import log as logging
 
-from king.common import exception
 from king.common.i18n import _
-from king.common.i18n import _LW
 from king.common import wsgi
 
 
@@ -224,11 +222,13 @@ auth_password_opts = [
 cinder_volume_opts = [
     cfg.IntOpt('volume_num',
                default=10,
-               help=_('The max num of cinder volume can be created.Default is 10.')),
+               help=_('The max num of cinder volume can be created.'
+                      'Default is 10.')),
     cfg.StrOpt('volume_size',
                default=102400,
-               help=_('The max MB of cinder volume can be created.Default is 102400 (100GB).')),
-]
+               help=_('The max MB of cinder volume can be created.'
+                      'Default is 102400 (100GB).'))]
+
 cinder_volume_group = cfg.OptGroup('cinder_volume')
 
 
@@ -283,6 +283,7 @@ def startup_sanity_check():
     '''you can check the config value here'''
     pass
 
+
 def list_opts():
     yield None, rpc_opts
     yield None, engine_opts
@@ -296,10 +297,9 @@ def list_opts():
     yield cinder_volume_group.name, cinder_volume_opts
 
     for client in ('barbican', 'ceilometer', 'cinder', 'designate', 'glance',
-                    'heat', 'keystone', 'magnum', 'manila', 'mistral',
-                    'neutron', 'nova', 'sahara', 'senlin', 'swift', 'trove',
-                    'zaqar', 'king'
-                    ):
+                   'heat', 'keystone', 'magnum', 'manila', 'mistral',
+                   'neutron', 'nova', 'sahara', 'senlin', 'swift', 'trove',
+                   'zaqar', 'king'):
         client_specific_group = 'clients_' + client
         yield client_specific_group, clients_opts
 

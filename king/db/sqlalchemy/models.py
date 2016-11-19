@@ -15,12 +15,11 @@
 
 from oslo_db.sqlalchemy import models
 from oslo_utils import timeutils
-import uuid
+from sqlalchemy.ext import declarative
+from sqlalchemy.orm import session as orm_session
 import six
 import sqlalchemy
-from sqlalchemy.orm import session as orm_session
-from sqlalchemy.ext import declarative
-
+import uuid
 
 
 BASE = declarative.declarative_base()
@@ -99,8 +98,8 @@ class Service(BASE, KingBase, SoftDelete):
                                  sqlalchemy.String(255),
                                  nullable=False)
     process = sqlalchemy.Column('process',
-                               sqlalchemy.String(255),
-                               nullable=False)
+                                sqlalchemy.String(255),
+                                nullable=False)
     topic = sqlalchemy.Column('topic',
                               sqlalchemy.String(255),
                               nullable=False)
@@ -117,20 +116,20 @@ class Order(BASE, KingBase, SoftDelete):
                            primary_key=True,
                            default=lambda: str(uuid.uuid4()))
     resource_id = sqlalchemy.Column('resource_id',
-                                sqlalchemy.String(36),
-                                nullable=False)
+                                    sqlalchemy.String(36),
+                                    nullable=False)
     account_id = sqlalchemy.Column('account_id',
-                                  sqlalchemy.String(36),
-                                  nullable=False)
+                                   sqlalchemy.String(36),
+                                   nullable=False)
     price_id = sqlalchemy.Column('price_id',
                                  sqlalchemy.String(36),
                                  nullable=False)
     order_status = sqlalchemy.Column('order_status',
-                                 sqlalchemy.String(255),
-                                 nullable=True)
+                                     sqlalchemy.String(255),
+                                     nullable=True)
     order_type = sqlalchemy.Column('order_type',
-                                 sqlalchemy.String(255),
-                                 nullable=True)
+                                   sqlalchemy.String(255),
+                                   nullable=True)
 
 
 class Account(BASE, KingBase, SoftDelete):
@@ -144,14 +143,14 @@ class Account(BASE, KingBase, SoftDelete):
                                 sqlalchemy.String(36),
                                 nullable=False)
     account_money = sqlalchemy.Column('account_money',
-                                  sqlalchemy.Float,
-                                  nullable=True)
+                                      sqlalchemy.Float,
+                                      nullable=True)
     account_level = sqlalchemy.Column('account_level',
-                                 sqlalchemy.Integer,
-                                 nullable=True)
+                                      sqlalchemy.Integer,
+                                      nullable=True)
     account_password = sqlalchemy.Column('account_password',
-                                 sqlalchemy.String(255),
-                                 nullable=True)
+                                         sqlalchemy.String(255),
+                                         nullable=True)
 
 
 class Price(BASE, KingBase, SoftDelete):
@@ -162,17 +161,17 @@ class Price(BASE, KingBase, SoftDelete):
                            primary_key=True,
                            default=lambda: str(uuid.uuid4()))
     price_type = sqlalchemy.Column('price_type',
-                                sqlalchemy.String(36),
-                                nullable=False)
+                                   sqlalchemy.String(36),
+                                   nullable=False)
     resource_id = sqlalchemy.Column('resource_id',
-                                sqlalchemy.String(36),
-                                nullable=False)
+                                    sqlalchemy.String(36),
+                                    nullable=False)
     order_type = sqlalchemy.Column('order_type',
-                                  sqlalchemy.String(36),
-                                  nullable=True)
+                                   sqlalchemy.String(36),
+                                   nullable=True)
     price_num = sqlalchemy.Column('price_num',
-                                 sqlalchemy.Float,
-                                 nullable=True)
+                                  sqlalchemy.Float,
+                                  nullable=True)
 
 
 class Order_acction_record(BASE, KingBase, SoftDelete):
@@ -183,14 +182,14 @@ class Order_acction_record(BASE, KingBase, SoftDelete):
                            primary_key=True,
                            default=lambda: str(uuid.uuid4()))
     order_id = sqlalchemy.Column('order_id',
-                                sqlalchemy.String(36),
-                                nullable=False)
+                                 sqlalchemy.String(36),
+                                 nullable=False)
     order_status_now = sqlalchemy.Column('order_status_now',
-                                  sqlalchemy.String(255),
-                                  nullable=True)
+                                         sqlalchemy.String(255),
+                                         nullable=True)
     order_status_change_to = sqlalchemy.Column('order_status_change_to',
-                                 sqlalchemy.String(255),
-                                 nullable=True)
+                                               sqlalchemy.String(255),
+                                               nullable=True)
 
 
 class Pay_record(BASE, KingBase, SoftDelete):
@@ -201,17 +200,17 @@ class Pay_record(BASE, KingBase, SoftDelete):
                            primary_key=True,
                            default=lambda: str(uuid.uuid4()))
     order_id = sqlalchemy.Column('order_id',
-                                sqlalchemy.String(36),
-                                nullable=False)
+                                 sqlalchemy.String(36),
+                                 nullable=False)
     account_id = sqlalchemy.Column('account_id',
-                                  sqlalchemy.String(36),
-                                  nullable=False)
+                                   sqlalchemy.String(36),
+                                   nullable=False)
     pay_action = sqlalchemy.Column('pay_action',
-                                 sqlalchemy.String(255),
-                                 nullable=True)
+                                   sqlalchemy.String(255),
+                                   nullable=True)
     pay = sqlalchemy.Column('pay',
-                                 sqlalchemy.Float,
-                                 nullable=True)
+                            sqlalchemy.Float,
+                            nullable=True)
     recharge = sqlalchemy.Column('recharge',
                                  sqlalchemy.Float,
                                  nullable=True)
@@ -225,8 +224,8 @@ class Crontab(BASE, KingBase, SoftDelete):
                            primary_key=True,
                            default=lambda: str(uuid.uuid4()))
     order_id = sqlalchemy.Column('order_id',
-                                sqlalchemy.String(36),
-                                nullable=False)
+                                 sqlalchemy.String(36),
+                                 nullable=False)
     cron_at = sqlalchemy.Column('cron_at',
-                                 sqlalchemy.DateTime,
-                                 nullable=True)
+                                sqlalchemy.DateTime,
+                                nullable=True)

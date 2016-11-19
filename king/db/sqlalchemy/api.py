@@ -156,6 +156,6 @@ def volume_quota_update(context, user_id, values):
     if volume_quota:
         volume_quota.update(values)
         volume_quota.save(_session(context))
-    else :
+    else:
         volume_quota = volume_quota_create(context, user_id, values)
     return volume_quota

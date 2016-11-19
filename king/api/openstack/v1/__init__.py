@@ -15,14 +15,13 @@ import routes
 import six
 
 from king.common import wsgi
+from king.api.openstack.v1 import account
 from king.api.openstack.v1 import order
 from king.api.openstack.v1 import price
-from king.api.openstack.v1 import account
 from king.api.openstack.v1 import services
 
 
 class API(wsgi.Router):
-
     """WSGI router for King v1 REST API requests."""
 
     def __init__(self, conf, **local_conf):
@@ -96,8 +95,7 @@ class API(wsgi.Router):
                         'action': 'list',
                         'method': 'GET'
                     }
-                ]
-        )
+                ])
 
         # order
         orders_resource = order.create_resource(conf)

@@ -2,7 +2,7 @@
 """empty message
 
 Revision ID: 014
-Revises: 
+Revises:
 Create Date: 2016-03-21 11:01:39.317932
 
 """
@@ -20,13 +20,13 @@ def upgrade(migrate_engine):
     meta = sqlalchemy.MetaData()
     meta.bind = migrate_engine
 
-
     service = sqlalchemy.Table(
         'service', meta,
         sqlalchemy.Column('id', sqlalchemy.String(36), primary_key=True),
         sqlalchemy.Column('created_at', sqlalchemy.DateTime),
         sqlalchemy.Column('updated_at', sqlalchemy.DateTime),
-        sqlalchemy.Column('engine_id', sqlalchemy.String(36), nullable=False),
+        sqlalchemy.Column('engine_id', sqlalchemy.String(36),
+                          nullable=False),
         sqlalchemy.Column('host', sqlalchemy.String(255)),
         sqlalchemy.Column('hostname', sqlalchemy.String(255)),
         sqlalchemy.Column('process', sqlalchemy.String(255)),
@@ -41,8 +41,10 @@ def upgrade(migrate_engine):
         sqlalchemy.Column('id', sqlalchemy.Integer, primary_key=True),
         sqlalchemy.Column('created_at', sqlalchemy.DateTime),
         sqlalchemy.Column('updated_at', sqlalchemy.DateTime),
-        sqlalchemy.Column('resource_id', sqlalchemy.String(36), nullable=False),
-        sqlalchemy.Column('account_id', sqlalchemy.String(36), nullable=False),
+        sqlalchemy.Column('resource_id', sqlalchemy.String(36),
+                          nullable=False),
+        sqlalchemy.Column('account_id', sqlalchemy.String(36),
+                          nullable=False),
         sqlalchemy.Column('price_id', sqlalchemy.String(36), nullable=False),
         sqlalchemy.Column('order_status', sqlalchemy.String(255)),
         sqlalchemy.Column('order_type', sqlalchemy.String(255)),
@@ -68,8 +70,10 @@ def upgrade(migrate_engine):
         sqlalchemy.Column('id', sqlalchemy.Integer, primary_key=True),
         sqlalchemy.Column('created_at', sqlalchemy.DateTime),
         sqlalchemy.Column('updated_at', sqlalchemy.DateTime),
-        sqlalchemy.Column('resource_id', sqlalchemy.String(36), nullable=False),
-        sqlalchemy.Column('order_type', sqlalchemy.String(255), nullable=False),
+        sqlalchemy.Column('resource_id', sqlalchemy.String(36),
+                          nullable=False),
+        sqlalchemy.Column('order_type', sqlalchemy.String(255),
+                          nullable=False),
         sqlalchemy.Column('price_num', sqlalchemy.Float),
         mysql_engine='InnoDB',
         mysql_charset='utf8',
@@ -81,7 +85,8 @@ def upgrade(migrate_engine):
         sqlalchemy.Column('created_at', sqlalchemy.DateTime),
         sqlalchemy.Column('updated_at', sqlalchemy.DateTime),
         sqlalchemy.Column('order_id', sqlalchemy.String(36), nullable=False),
-        sqlalchemy.Column('account_id', sqlalchemy.String(36), nullable=False),
+        sqlalchemy.Column('account_id', sqlalchemy.String(36),
+                          nullable=False),
         sqlalchemy.Column('pay_action', sqlalchemy.String(255)),
         sqlalchemy.Column('pay', sqlalchemy.Float),
         sqlalchemy.Column('recharge', sqlalchemy.Float),
@@ -112,6 +117,7 @@ def upgrade(migrate_engine):
     )
 
     tables = (
+        service,
         order,
         account,
         price,
