@@ -128,35 +128,3 @@ def service_get_all_by_args(context, host, process, hostname):
                           hostname=hostname,
                           process=process).all()
     return res
-
-
-def volume_quota_get(context, user_id):
-    query = model_query(context, models.Volume)
-    res = query.filter_by(user_id=user_id).first()
-    return res
-
-
-def volume_quota_get_all(context):
-    query = model_query(context, models.Volume)
-    res = query.filter_by().all()
-    return res
-
-
-def volume_quota_create(context, user_id, values):
-    session = get_session()
-    volume_quota = models.Volume()
-    values['user_id'] = user_id
-    volume_quota.update(values)
-    volume_quota.save(session)
-    return volume_quota
-
-
-def volume_quota_update(context, user_id, values):
-    values.update({'updated_at': timeutils.utcnow()})
-    volume_quota = volume_quota_get(context, user_id)
-    if volume_quota:
-        volume_quota.update(values)
-        volume_quota.save(_session(context))
-    else:
-        volume_quota = volume_quota_create(context, user_id, values)
-    return volume_quota
