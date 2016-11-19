@@ -1,0 +1,16 @@
+pkg/
+Gemfile.lock
+vendor/
+spec/fixtures/
+.vagrant/
+.bundle/
+coverage/
+.idea/
+*.swp
+*.iml
+*.pyo
+*.pyc
+AUTHORS
+ChangeLog
+build/
+king.egg-info
