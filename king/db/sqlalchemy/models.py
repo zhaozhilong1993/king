@@ -144,7 +144,7 @@ class Account(BASE, KingBase, SoftDelete):
                                 sqlalchemy.String(36),
                                 nullable=False)
     account_money = sqlalchemy.Column('account_money',
-                                  sqlalchemy.String(36),
+                                  sqlalchemy.Float,
                                   nullable=True)
     account_level = sqlalchemy.Column('account_level',
                                  sqlalchemy.Integer,
@@ -171,7 +171,7 @@ class Price(BASE, KingBase, SoftDelete):
                                   sqlalchemy.String(36),
                                   nullable=True)
     price_num = sqlalchemy.Column('price_num',
-                                 sqlalchemy.String(36),
+                                 sqlalchemy.Float,
                                  nullable=True)
 
 
@@ -210,10 +210,10 @@ class Pay_record(BASE, KingBase, SoftDelete):
                                  sqlalchemy.String(255),
                                  nullable=True)
     pay = sqlalchemy.Column('pay',
-                                 sqlalchemy.Integer,
+                                 sqlalchemy.Float,
                                  nullable=True)
     recharge = sqlalchemy.Column('recharge',
-                                 sqlalchemy.Integer,
+                                 sqlalchemy.Float,
                                  nullable=True)
 
 

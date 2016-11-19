@@ -56,7 +56,7 @@ def upgrade(migrate_engine):
         sqlalchemy.Column('created_at', sqlalchemy.DateTime),
         sqlalchemy.Column('updated_at', sqlalchemy.DateTime),
         sqlalchemy.Column('user_id', sqlalchemy.String(36), nullable=False),
-        sqlalchemy.Column('account_money', sqlalchemy.String(36), nullable=False),
+        sqlalchemy.Column('account_money', sqlalchemy.Float, nullable=False),
         sqlalchemy.Column('account_level', sqlalchemy.Integer),
         sqlalchemy.Column('account_password', sqlalchemy.String(255)),
         mysql_engine='InnoDB',
@@ -70,7 +70,7 @@ def upgrade(migrate_engine):
         sqlalchemy.Column('updated_at', sqlalchemy.DateTime),
         sqlalchemy.Column('resource_id', sqlalchemy.String(36), nullable=False),
         sqlalchemy.Column('order_type', sqlalchemy.String(255), nullable=False),
-        sqlalchemy.Column('price_num', sqlalchemy.String(255)),
+        sqlalchemy.Column('price_num', sqlalchemy.Float),
         mysql_engine='InnoDB',
         mysql_charset='utf8',
     )
@@ -83,8 +83,8 @@ def upgrade(migrate_engine):
         sqlalchemy.Column('order_id', sqlalchemy.String(36), nullable=False),
         sqlalchemy.Column('account_id', sqlalchemy.String(36), nullable=False),
         sqlalchemy.Column('pay_action', sqlalchemy.String(255)),
-        sqlalchemy.Column('pay', sqlalchemy.String(255)),
-        sqlalchemy.Column('recharge', sqlalchemy.String(255)),
+        sqlalchemy.Column('pay', sqlalchemy.Float),
+        sqlalchemy.Column('recharge', sqlalchemy.Float),
         mysql_engine='InnoDB',
         mysql_charset='utf8',
     )
