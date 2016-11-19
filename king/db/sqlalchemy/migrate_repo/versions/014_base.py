@@ -6,14 +6,13 @@ Revises:
 Create Date: 2016-03-21 11:01:39.317932
 
 """
+import sqlalchemy
 
 # revision identifiers, used by Alembic.
 revision = '014'
 down_revision = None
 branch_labels = None
 depends_on = None
-
-import sqlalchemy
 
 
 def upgrade(migrate_engine):

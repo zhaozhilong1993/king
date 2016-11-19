@@ -20,7 +20,6 @@ engine.
 """
 import eventlet
 import oslo_i18n as i18n
-eventlet.monkey_patch()
 from king.common import config
 from king.common import messaging
 from king.common import profiler
@@ -33,6 +32,7 @@ from oslo_reports import guru_meditation_report as gmr
 from oslo_service import service
 
 
+eventlet.monkey_patch()
 i18n.enable_lazy()
 
 LOG = logging.getLogger('king.engine')

@@ -20,7 +20,6 @@ import eventlet
 import sys
 import six
 import oslo_i18n as i18n
-eventlet.monkey_patch(os=False)
 from oslo_config import cfg
 from oslo_log import log as logging
 from oslo_reports import guru_meditation_report as gmr
@@ -32,6 +31,7 @@ from king.common import profiler
 from king.common import wsgi
 from king import version
 
+eventlet.monkey_patch(os=False)
 i18n.enable_lazy()
 
 LOG = logging.getLogger('king.api')
