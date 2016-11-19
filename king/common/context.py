@@ -26,7 +26,8 @@ import six
 
 from king.common import endpoint_utils
 from king.common import exception
-from king.common.i18n import _LE, _LW
+from king.common.i18n import _LE
+from king.common.i18n import _LW
 from king.common import policy
 from king.common import wsgi
 from king.db import api as db_api

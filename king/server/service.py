@@ -12,30 +12,27 @@
 #    under the License.
 
 import collections
-import uuid
-import socket
-
-import eventlet
-from oslo_config import cfg
-from oslo_log import log as logging
-import oslo_messaging as messaging
-from oslo_service import service
-from oslo_service import threadgroup
-from oslo_utils import timeutils
-from osprofiler import profiler
-import six
 import datetime
-
+import eventlet
+import oslo_messaging as messaging
+import socket
+import six
+import uuid
 from king.common import context
 from king.rpc import api as rpc_api
 from king.objects import services as services_object
-
 from king.common.i18n import _LE
 from king.common.i18n import _LI
 from king.common.i18n import _LW
 from king.common import messaging as rpc_messaging
 from king.common import policy
 from king.common import service_utils
+from oslo_config import cfg
+from oslo_log import log as logging
+from oslo_service import service
+from oslo_service import threadgroup
+from oslo_utils import timeutils
+from osprofiler import profiler
 
 
 LOG = logging.getLogger(__name__)
@@ -95,8 +92,6 @@ class ThreadGroupManager(object):
                                               func, *args, **kwargs)
         th.link(log_exceptions)
         return th
-
-
 
     def start_with_acquired_lock(self, stack, lock, func, *args, **kwargs):
         """Run the given method in a sub-thread with an existing stack lock.
@@ -303,8 +298,8 @@ class EngineService(service.Service):
         self.manage_thread_grp.add_timer(cfg.CONF.periodic_interval,
                                          self.service_manage_report)
 
-        # if you have other resources , you may want to check the status of that resources
-        # like :
+        # if you have other resources, you may want to check the
+        # status of that resource, like :
         # self.manage_thread_grp.add_thread(self.reset_stack_status)
 
         super(EngineService, self).start()
@@ -338,7 +333,7 @@ class EngineService(service.Service):
             LOG.info(_LI("Stack %s processing was finished"), stack_id)
 
         self.manage_thread_grp.stop()
-        ctxt = context.get_admin_context()
+        # ctxt = context.get_admin_context()
 
         # here should change the status of Service in databases
         # services_objects.Service.delete(ctxt, self.service_id)
@@ -356,10 +351,9 @@ class EngineService(service.Service):
     def list_services(self, cnxt):
         result = {}
         services_list = [service_utils.format_service(srv)
-                  for srv in services_object.Service.get_all(cnxt)]
+                         for srv in services_object.Service.get_all(cnxt)]
         result['services'] = services_list
         return result
-
 
     def service_manage_report(self):
         cnxt = context.get_admin_context()
@@ -382,31 +376,31 @@ class EngineService(service.Service):
         try:
             # update the service info, cause will use in service_manage_cleanup
             services_object.Service.update_by_id(cnxt,
-                                                self.service_id,
-                                                dict(deleted_at=None))
+                                                 self.service_id,
+                                                 dict(deleted_at=None))
         except Exception as ex:
             LOG.error(_LE('Service %(service_id)s update '
                           'failed: %(error)s'),
                       {'service_id': self.service_id, 'error': ex})
 
-
-
     def service_manage_cleanup(self):
         cnxt = context.get_admin_context()
         last_update_window = (3 * cfg.CONF.periodic_interval)
-        last_update_time = timeutils.utcnow() - datetime.timedelta(seconds=last_update_window)
+        last_update_time = timeutils.utcnow() \
+                - datetime.timedelta(seconds=last_update_window)
 
         service_refs = services_object.Service.get_all_by_args(cnxt,
-                                                              self.host,
-                                                              self.process,
-                                                              self.hostname)
+                                                               self.host,
+                                                               self.process,
+                                                               self.hostname)
         for service_ref in service_refs:
             # means the process is deleted by others
             if (service_ref['updated_at'] is None
-                or service_ref['deleted_at'] is not None):
+                    or service_ref['deleted_at'] is not None):
                 continue
             if service_ref['updated_at'] < last_update_time:
                 # maybe service is dead
-                LOG.info("service engine %s is dead or in some bad status"% service_ref['engine_id'])
+                LOG.info(_LI("service engine %(engine)s is dead "
+                             "or in some bad status",
+                             {'engine': service_ref['engine_id']}))
                 services_object.Service.delete(cnxt, service_ref['id'])
-

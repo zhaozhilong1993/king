@@ -14,9 +14,6 @@
 #    under the License.
 
 """Client side of the heat engine RPC API."""
-
-from oslo_utils import reflection
-
 from king.common import messaging
 from king.rpc import api as rpc_api
 
@@ -60,7 +57,6 @@ class EngineClient(object):
         else:
             client = self._client
         return client.cast(ctxt, method, **kwargs)
-
 
     def list_services(self, ctxt):
         """list the services

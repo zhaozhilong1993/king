@@ -11,25 +11,26 @@
 #    License for the specific language governing permissions and limitations
 #    under the License.
 
-"""quota endpoint for King v1 REST API."""
+"""order endpoint for King v1 REST API."""
+
+from oslo_log import log as logging
 
 from king.api.openstack.v1 import util
 from king.common import serializers
 from king.common import wsgi
 from king.rpc import client as rpc_client
-from oslo_log import log as logging
 
 
 LOG = logging.getLogger(__name__)
 
 
-class ServicesController(object):
-    """WSGI controller for volume resource in King v1 API.
+class PriceController(object):
+    """WSGI controller for order resource in King v1 API.
 
     Implements the API actions.
     """
     # Define request scope (must match what is in policy.json)
-    REQUEST_SCOPE = 'services'
+    REQUEST_SCOPE = 'order'
 
     def __init__(self, options):
         self.options = options
@@ -37,13 +38,27 @@ class ServicesController(object):
 
     @util.policy_enforce
     def list(self, req):
-        """list services"""
-        res = self.rpc_client.list_services(req.context)
-        return res
+        """get all order"""
+        pass
+
+    @util.policy_enforce
+    def show(self, req, body):
+        """get all order"""
+        pass
+
+    @util.policy_enforce
+    def create(self, req):
+        """create order"""
+        pass
+
+    @util.policy_enforce
+    def update_status(self, req):
+        """create order"""
+        pass
 
 
 def create_resource(options):
-    """volume resource factory method."""
+    """order resource factory method."""
     deserializer = wsgi.JSONRequestDeserializer()
     serializer = serializers.JSONResponseSerializer()
-    return wsgi.Resource(ServicesController(options), deserializer, serializer)
+    return wsgi.Resource(PriceController(options), deserializer, serializer)

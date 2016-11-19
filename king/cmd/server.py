@@ -20,21 +20,20 @@ engine.
 """
 
 import eventlet
+import oslo_i18n as i18n
 eventlet.monkey_patch()
 
+from king.common import config
+from king.common import messaging
+from king.common import profiler
+from king import version
+from king.rpc import api as rpc_api
 from oslo_concurrency import processutils
 from oslo_config import cfg
-import oslo_i18n as i18n
 from oslo_log import log as logging
 from oslo_reports import guru_meditation_report as gmr
 from oslo_service import service
 
-from king.common import config
-from king.rpc import api as rpc_api
-from king.common import messaging
-from king.common import profiler
-
-from king import version
 
 i18n.enable_lazy()
 

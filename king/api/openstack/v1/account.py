@@ -14,19 +14,12 @@
 """quota endpoint for King v1 REST API."""
 
 from oslo_log import log as logging
-from webob import exc
-import six
-import json
 
 from king.api.openstack.v1 import util
 from king.common import serializers
 from king.common import wsgi
-
-from king.db import api as db_api
-from king.rpc import api as rpc_api
 from king.rpc import client as rpc_client
 
-from king.common.i18n import _
 
 LOG = logging.getLogger(__name__)
 
@@ -47,21 +40,17 @@ class AccountController(object):
     def create(self, req, body):
         pass
 
-
     @util.policy_enforce
     def list(self, req, body):
         pass
-
 
     @util.policy_enforce
     def recharge(self, req, body):
         pass
 
-
     @util.policy_enforce
     def update_level(self, req, body):
         pass
-
 
     @util.policy_enforce
     def update_password(self, req, body):

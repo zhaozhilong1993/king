@@ -113,7 +113,6 @@ def add_command_parsers(subparsers):
                         help=_('Stack resource id'))
 
 
-
 command_opt = cfg.SubCommandOpt('command',
                                 title='Commands',
                                 help='Show available commands.',
