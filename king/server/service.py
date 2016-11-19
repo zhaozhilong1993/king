@@ -29,7 +29,6 @@ import datetime
 from king.common import context
 from king.rpc import api as rpc_api
 from king.objects import services as services_object
-from king.objects import volume as volume_object
 
 from king.common.i18n import _LE
 from king.common.i18n import _LI
@@ -38,7 +37,6 @@ from king.common import messaging as rpc_messaging
 from king.common import policy
 from king.common import service_utils
 
-from king.server import volume
 from king.server import clients
 
 
@@ -363,79 +361,6 @@ class EngineService(service.Service):
                   for srv in services_object.Service.get_all(cnxt)]
         result['services'] = services_list
         return result
-
-
-    @context.request_context
-    def list_quota(self, cnxt):
-        result = {}
-        tmp = []
-        for volume in volume_object.Volume.get_all(cnxt):
-            tmp.append(service_utils._volume_quota_format(volume))
-        result['volume'] = tmp
-        return result
-
-
-    @context.request_context
-    def show_quota(self, cnxt, body):
-        result = {}
-        tmp = []
-        volume = volume_object.Volume.show(cnxt, body['user_id'])
-
-        if volume is not None:
-            tmp.append(service_utils._volume_quota_format(volume))
-            result['volume'] = tmp
-        else:
-            result['volume'] = self.list_default_quota(cnxt)['volume']
-        return result
-
-
-    @context.request_context
-    def list_default_quota(self, cnxt):
-        result = {}
-        volume_quota = cfg.CONF.cinder_volume
-        result['volume'] = [{
-            'user_id':'default',
-            'volume_num':volume_quota.volume_num,
-            'volume_size':volume_quota.volume_size,
-            'updated_at':'-'
-        }]
-        return result
-
-    @context.request_context
-    def update_quota(self, cnxt, body):
-
-        result = {}
-        user_id = body.get('user').get('user_id')
-
-        volume_quota = body.get('volume')
-        if volume_quota:
-            result['volume'] = service_utils._volume_quota_format(
-                                    volume_object.Volume.update_by_id(cnxt,
-                                                                      user_id,
-                                                                      volume_quota)
-                                    )
-        return result
-
-
-    @context.request_context
-    def create_volume(self, cnxt, body):
-        # create volume
-        info = body['volume']
-
-        arg = {}
-        arg['size'] = int(info.get('size'))
-        arg['snapshot_id'] = info.get('snapshot_id')
-        arg['display_name'] = info.get('name')
-        arg['display_description'] = info.get('description')
-        arg['volume_type'] = info.get('volume_type')
-        arg['user_id'] = info.get('user_id')
-        arg['project_id'] = info.get('project_id')
-        arg['availability_zone'] = info.get('availability_zone')
-        arg['metadata'] = info.get('metadata')
-        arg['imageRef'] = info.get('imageRef')
-        arg['source_volid'] = info.get('source_volid')
-
-        return volume.Volume(cnxt).create(arg)
 
 
     def service_manage_report(self):
