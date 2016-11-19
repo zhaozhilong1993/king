@@ -37,8 +37,6 @@ from king.common import messaging as rpc_messaging
 from king.common import policy
 from king.common import service_utils
 
-from king.server import clients
-
 
 LOG = logging.getLogger(__name__)
 
