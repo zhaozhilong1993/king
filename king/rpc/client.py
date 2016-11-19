@@ -64,4 +64,3 @@ class EngineClient(object):
         """
         return self.call(ctxt, self.make_msg('list_services'),
                          version='1.0')
-

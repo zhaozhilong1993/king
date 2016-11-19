@@ -16,6 +16,7 @@
 from oslo_config import cfg
 from oslo_db.sqlalchemy import session as db_session
 from oslo_utils import timeutils
+from king.common.i18n import _
 
 from king.common import exception
 from king.db.sqlalchemy import migration

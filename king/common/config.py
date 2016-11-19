@@ -308,8 +308,8 @@ def list_opts():
     yield 'clients_nova', client_http_log_debug_opts
     yield 'clients_cinder', client_http_log_debug_opts
 
-cfg.CONF.register_group(cinder_volume_group)
 
+cfg.CONF.register_group(cinder_volume_group)
 cfg.CONF.register_group(paste_deploy_group)
 cfg.CONF.register_group(auth_password_group)
 cfg.CONF.register_group(revision_group)

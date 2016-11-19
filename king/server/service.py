@@ -385,9 +385,9 @@ class EngineService(service.Service):
 
     def service_manage_cleanup(self):
         cnxt = context.get_admin_context()
-        last_update_window = (3 * cfg.CONF.periodic_interval)
-        last_update_time = timeutils.utcnow() \
-                - datetime.timedelta(seconds=last_update_window)
+        last_window = (3 * cfg.CONF.periodic_interval)
+        utcnow = timeutils.utcnow()
+        last_update_time = utcnow - datetime.timedelta(seconds=last_window)
 
         service_refs = services_object.Service.get_all_by_args(cnxt,
                                                                self.host,

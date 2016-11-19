@@ -18,11 +18,9 @@ This does the work of actually implementing the API calls made by the user.
 Normal communications is done via the king API which then calls into this
 engine.
 """
-
 import eventlet
 import oslo_i18n as i18n
 eventlet.monkey_patch()
-
 from king.common import config
 from king.common import messaging
 from king.common import profiler

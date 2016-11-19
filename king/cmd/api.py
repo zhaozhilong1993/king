@@ -16,19 +16,15 @@
 
 An OpenStack ReST API to king.
 """
-
 import eventlet
-eventlet.monkey_patch(os=False)
-
 import sys
-
-from oslo_config import cfg
+import six
 import oslo_i18n as i18n
+eventlet.monkey_patch(os=False)
+from oslo_config import cfg
 from oslo_log import log as logging
 from oslo_reports import guru_meditation_report as gmr
 from oslo_service import systemd
-import six
-
 from king.common import config
 from king.common.i18n import _LI
 from king.common import messaging
