@@ -16,6 +16,7 @@ import six
 
 from king.common import wsgi
 from king.api.openstack.v1 import order
+from king.api.openstack.v1 import price
 from king.api.openstack.v1 import account
 from king.api.openstack.v1 import services
 
