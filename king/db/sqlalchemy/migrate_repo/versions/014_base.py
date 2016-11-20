@@ -23,6 +23,7 @@ def upgrade(migrate_engine):
         'service', meta,
         sqlalchemy.Column('id', sqlalchemy.String(36), primary_key=True),
         sqlalchemy.Column('created_at', sqlalchemy.DateTime),
+        sqlalchemy.Column('deleted_at', sqlalchemy.DateTime),
         sqlalchemy.Column('updated_at', sqlalchemy.DateTime),
         sqlalchemy.Column('engine_id', sqlalchemy.String(36),
                           nullable=False),
