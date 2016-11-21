@@ -16,7 +16,7 @@
 from king.api.openstack.v1 import util
 from king.common import serializers
 from king.common import wsgi
-from king.rpc import client as rpc_client
+from king.db import api as db_api
 from oslo_log import log as logging
 
 
@@ -33,12 +33,11 @@ class ServicesController(object):
 
     def __init__(self, options):
         self.options = options
-        self.rpc_client = rpc_client.EngineClient()
 
     @util.policy_enforce
     def list(self, req):
         """list services"""
-        res = self.rpc_client.list_services(req.context)
+        res = db_api.service_get_all(req.context)
         return res
 
 

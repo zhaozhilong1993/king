@@ -12,11 +12,12 @@
 #    under the License.
 
 """Implementation of SQLAlchemy backend."""
-
 from oslo_config import cfg
+from oslo_log import log as logging
 from oslo_db.sqlalchemy import session as db_session
 from oslo_utils import timeutils
 from king.common.i18n import _
+from king.common.i18n import _LE
 
 from king.common import exception
 from king.db.sqlalchemy import migration
@@ -26,6 +27,8 @@ import osprofiler.sqlalchemy
 import sqlalchemy
 from sqlalchemy.orm import session as orm_session
 import sys
+
+LOG = logging.getLogger(__name__)
 
 CONF = cfg.CONF
 CONF.import_opt('hidden_stack_tags', 'king.common.config')
@@ -133,16 +136,16 @@ def service_get_all_by_args(context, host, process, hostname):
 def order_get(context, resource_id, order_id=None):
     query = model_query(context, models.Order)
     if order_id:
-      res = query.get(order_id)
+        res = query.get(order_id)
     else:
-      res = query.get(resource_id)
+        res = query.get(resource_id)
     if res is None:
         LOG.error(_LE('resouce_id : %s do not have a order' % resource_id))
         raise exception.EntityNotFound(entity='Order', name=resource_id)
     return res
 
 
-def create_order(context, value):
+def order_create(context, value):
     session = get_session()
     order = models.Order()
     order.update(value)

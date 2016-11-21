@@ -12,15 +12,22 @@
 #    under the License.
 
 """order endpoint for King v1 REST API."""
-
-from oslo_log import log as logging
+import json
+import six
+from webob import exc
 
 from king.api.openstack.v1 import util
 from king.common import serializers
+from king.common import service_utils
 from king.common import wsgi
-from king.db import api as db_api
-from king.rpc import client as rpc_client
 
+from king.common.i18n import _
+
+
+from king.rpc import client as rpc_client
+from king.objects.order import Order as order_object
+
+from oslo_log import log as logging
 
 LOG = logging.getLogger(__name__)
 
@@ -42,43 +49,41 @@ class OrderController(object):
         """get all order"""
         pass
 
-
     @util.policy_enforce
     def show(self, req):
         """get all order"""
         pass
 
-
     @util.policy_enforce
-    def create(self, req):
+    def create(self, req, body):
         """create order"""
         body_str = req.body
         try:
             body = json.loads(body_str)
         except ValueError as ex:
-            msg = _("Post data is not supported: %s") % ex
+            msg = _("Post data error: %s") % ex
             raise exc.HTTPBadRequest(six.text_type(msg))
 
-        if not body.has_key('order'):
-            msg = _("Post data is not supported: key order not found")
+        if 'order' in body:
+            msg = _("Post data error: key order not found")
             raise exc.HTTPBadRequest(six.text_type(msg))
-        else :
+        else:
             try:
-                if body['order']['resource_id'] is None
-                    msg = _("Post data is not supported: resource_id can not be null")
+                if body['order']['resource_id'] is None:
+                    msg = _("Post data error: resource_id can not be null")
                     raise exc.HTTPBadRequest(six.text_type(msg))
-                if body['order']['price_id'] is None
-                    msg = _("Post data is not supported: price_id can not be null")
+                if body['order']['price_id'] is None:
+                    msg = _("Post data error: price_id can not be null")
                     raise exc.HTTPBadRequest(six.text_type(msg))
-                if body['order']['account_id'] is None
-                    msg = _("Post data is not supported: account_id can not be null")
+                if body['order']['account_id'] is None:
+                    msg = _("Post data error: account_id can not be null")
                     raise exc.HTTPBadRequest(six.text_type(msg))
             except KeyError as ex:
-                    msg = _("Post data is not supported: some key not be found")
+                    msg = _("Post data error: some key not be found")
                     raise exc.HTTPBadRequest(six.text_type(msg))
-            db_api.order_create(body['order'])
+            res = service_utils.to_dict(order_object.create(req.context,
+                                                            body['order']))
             return res
-
 
     @util.policy_enforce
     def update_status(self, req):
@@ -87,21 +92,21 @@ class OrderController(object):
         try:
             body = json.loads(body_str)
         except ValueError as ex:
-            msg = _("Post data is not supported: %s") % ex
+            msg = _("Post data error: %s") % ex
             raise exc.HTTPBadRequest(six.text_type(msg))
 
-        if not body.has_key('order'):
-            msg = _("Post data is not supported: key order not found")
+        if 'order' in body:
+            msg = _("Post data error: key order not found")
             raise exc.HTTPBadRequest(six.text_type(msg))
-        else :
+        else:
             try:
-                if body['order']['resource_id'] is None
-                    msg = _("Post data is not supported: resource_id can not be null")
+                if body['order']['resource_id'] is None:
+                    msg = _("Post data error: resource_id can not be null")
                     raise exc.HTTPBadRequest(six.text_type(msg))
             except KeyError as ex:
-                    msg = _("Post data is not supported: some key not be found")
-                    raise exc.HTTPBadRequest(six.text_type(msg))
-            db_api.order_update(body['order'])
+                msg = _("Post data error: some key not be found")
+                raise exc.HTTPBadRequest(six.text_type(msg))
+        pass
 
 
 def create_resource(options):

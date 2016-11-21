@@ -69,8 +69,8 @@ def format_service(service):
     return result
 
 
-def _volume_quota_format(volume_object):
-    quota = {}
-    for field in volume_object.fields:
-        quota[field] = volume_object[field]
-    return quota
+def to_dict(value):
+    res = {}
+    for field in value.fields:
+        res[field] = value[field]
+    return res

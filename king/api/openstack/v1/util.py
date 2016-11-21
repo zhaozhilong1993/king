@@ -24,7 +24,7 @@ def policy_enforce(handler):
     This is a handler method decorator.
     """
     @six.wraps(handler)
-    def handle_stack_method(controller, req, **kwargs):
+    def handle_method(controller, req, **kwargs):
         allowed = req.context.policy.enforce(context=req.context,
                                              action=handler.__name__,
                                              scope=controller.REQUEST_SCOPE)
@@ -32,7 +32,7 @@ def policy_enforce(handler):
             raise exc.HTTPForbidden()
         return handler(controller, req, **kwargs)
 
-    return handle_stack_method
+    return handle_method
 
 
 PARAM_TYPES = (

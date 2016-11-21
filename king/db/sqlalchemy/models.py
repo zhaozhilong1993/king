@@ -130,6 +130,15 @@ class Order(BASE, KingBase, SoftDelete):
     order_type = sqlalchemy.Column('order_type',
                                    sqlalchemy.String(255),
                                    nullable=True)
+    created_at = sqlalchemy.Column('created_at',
+                                   sqlalchemy.DateTime,
+                                   nullable=True)
+    updated_at = sqlalchemy.Column('updated_at',
+                                   sqlalchemy.DateTime,
+                                   nullable=True)
+    deleted_at = sqlalchemy.Column('deleted_at',
+                                   sqlalchemy.DateTime,
+                                   nullable=True)
 
 
 class Account(BASE, KingBase, SoftDelete):
