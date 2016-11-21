@@ -65,9 +65,6 @@ class OrderController(object):
             raise exc.HTTPBadRequest(six.text_type(msg))
 
         if 'order' in body:
-            msg = _("Post data error: key order not found")
-            raise exc.HTTPBadRequest(six.text_type(msg))
-        else:
             try:
                 if body['order']['resource_id'] is None:
                     msg = _("Post data error: resource_id can not be null")
@@ -84,6 +81,9 @@ class OrderController(object):
             res = service_utils.to_dict(order_object.create(req.context,
                                                             body['order']))
             return res
+        else:
+            msg = _("Post data error: key order not found")
+            raise exc.HTTPBadRequest(six.text_type(msg))
 
     @util.policy_enforce
     def update_status(self, req):
