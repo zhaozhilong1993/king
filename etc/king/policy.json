@@ -1,5 +1,6 @@
 {
   "context_is_admin": "role:admin",
+  "account:create": "",
   "order:create": "",
   "price:create": "",
   "services:list": ""

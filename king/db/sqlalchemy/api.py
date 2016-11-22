@@ -168,3 +168,11 @@ def price_create(context, value):
     price.update(value)
     price.save(session)
     return price
+
+
+def account_create(context, value):
+    session = get_session()
+    account = models.Account()
+    account.update(value)
+    account.save(session)
+    return account

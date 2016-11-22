@@ -12,7 +12,7 @@
 # under the License.
 
 
-"""Service object."""
+"""Order object."""
 
 from oslo_versionedobjects import base
 from oslo_versionedobjects import fields

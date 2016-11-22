@@ -153,13 +153,24 @@ class Account(BASE, KingBase, SoftDelete):
                                 nullable=False)
     account_money = sqlalchemy.Column('account_money',
                                       sqlalchemy.Float,
+                                      default=10.0,
                                       nullable=True)
     account_level = sqlalchemy.Column('account_level',
                                       sqlalchemy.Integer,
+                                      default=3,
                                       nullable=True)
     account_password = sqlalchemy.Column('account_password',
                                          sqlalchemy.String(255),
                                          nullable=True)
+    created_at = sqlalchemy.Column('created_at',
+                                   sqlalchemy.DateTime,
+                                   nullable=True)
+    updated_at = sqlalchemy.Column('updated_at',
+                                   sqlalchemy.DateTime,
+                                   nullable=True)
+    deleted_at = sqlalchemy.Column('deleted_at',
+                                   sqlalchemy.DateTime,
+                                   nullable=True)
 
 
 class Price(BASE, KingBase, SoftDelete):
