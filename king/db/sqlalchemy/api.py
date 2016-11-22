@@ -146,6 +146,7 @@ def order_get(context, resource_id, order_id=None):
 
 
 def order_create(context, value):
+    value['created_at'] = timeutils.utcnow()
     session = get_session()
     order = models.Order()
     order.update(value)
@@ -163,6 +164,7 @@ def update_order(context, value):
 
 
 def price_create(context, value):
+    value['created_at'] = timeutils.utcnow()
     session = get_session()
     price = models.Price()
     price.update(value)
@@ -171,6 +173,7 @@ def price_create(context, value):
 
 
 def account_create(context, value):
+    value['created_at'] = timeutils.utcnow()
     session = get_session()
     account = models.Account()
     account.update(value)
