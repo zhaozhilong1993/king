@@ -18,9 +18,11 @@ import oslo_messaging as messaging
 import socket
 import six
 import uuid
+from apscheduler.schedulers.blocking import BlockingScheduler
 from king.common import context
 from king.rpc import api as rpc_api
 from king.objects import services as services_object
+from king.objects import order as order_object
 from king.common.i18n import _LE
 from king.common.i18n import _LI
 from king.common.i18n import _LW
@@ -251,6 +253,8 @@ class EngineService(service.Service):
         self.service_id = None
         self.manage_thread_grp = None
         self._rpc_server = None
+        self.scheduler = BlockingScheduler()
+        self.order = order_object.Order()
 
         self.resource_enforcer = policy.ResourceEnforcer()
 
@@ -295,7 +299,24 @@ class EngineService(service.Service):
         # status of that resource, like :
         # self.manage_thread_grp.add_thread(self.reset_stack_status)
 
+        self.inition_cron_task()
         super(EngineService, self).start()
+
+    def _from_db_get_all_order(self):
+        return self.order.get_all(None)
+
+    def inition_cron_task(self):
+        LOG.debug("Inition crontab job")
+        for task in self._from_db_get_all_order():
+            # check the order
+            self.scheduler.add_job(self.cron_task,
+                                   'cron',
+                                   second='*/10',
+                                   hour='*')
+
+    def cron_task(self):
+        # count
+        pass
 
     def _stop_rpc_server(self):
         # Stop rpc connection at first for preventing new requests
@@ -393,7 +414,5 @@ class EngineService(service.Service):
                 continue
             if service_ref['updated_at'] < last_update_time:
                 # maybe service is dead
-                LOG.info(_LI("service engine %(engine)s is dead "
-                             "or in some bad status",
-                             {'engine': service_ref['engine_id']}))
+                LOG.info("engine %s is dead." % service_ref['engine_id'])
                 services_object.Service.delete(cnxt, service_ref['id'])

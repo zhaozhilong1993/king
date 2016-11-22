@@ -66,6 +66,10 @@ def service_get_all_by_args(context, host, process, hostname):
     return IMPL.service_get_all_by_args(context, host, process, hostname)
 
 
+def order_get_all(context):
+    return IMPL.order_get_all(context)
+
+
 def order_create(context, value):
     return IMPL.order_create(context, value)
 

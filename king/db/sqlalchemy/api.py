@@ -133,6 +133,11 @@ def service_get_all_by_args(context, host, process, hostname):
     return res
 
 
+def order_get_all(context):
+    return (model_query(context, models.Order).
+            filter_by(deleted_at=None).all())
+
+
 def order_get(context, resource_id, order_id=None):
     query = model_query(context, models.Order)
     if order_id:

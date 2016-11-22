@@ -59,3 +59,9 @@ class Order(
             context,
             cls(),
             db_api.order_create(context, values))
+
+    @classmethod
+    def get_all(cls, context):
+        return cls._from_db_objects(
+            context,
+            db_api.order_get_all(context))
