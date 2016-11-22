@@ -17,6 +17,7 @@ from king.api.openstack.v1 import util
 from king.common import serializers
 from king.common import wsgi
 from king.db import api as db_api
+from king.objects.services import Service as service_object
 from oslo_log import log as logging
 
 
@@ -37,7 +38,8 @@ class ServicesController(object):
     @util.policy_enforce
     def list(self, req):
         """list services"""
-        res = db_api.service_get_all(req.context)
+        res = service_object.get_all(req.context)
+        import pdb;pdb.set_trace()
         return res
 
 
