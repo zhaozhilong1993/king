@@ -55,7 +55,7 @@ def upgrade(migrate_engine):
 
     account = sqlalchemy.Table(
         'account', meta,
-        sqlalchemy.Column('id', sqlalchemy.Integer, primary_key=True),
+        sqlalchemy.Column('id', sqlalchemy.String(36), primary_key=True),
         sqlalchemy.Column('created_at', sqlalchemy.DateTime),
         sqlalchemy.Column('deleted_at', sqlalchemy.DateTime),
         sqlalchemy.Column('updated_at', sqlalchemy.DateTime),
@@ -69,11 +69,13 @@ def upgrade(migrate_engine):
 
     price = sqlalchemy.Table(
         'price', meta,
-        sqlalchemy.Column('id', sqlalchemy.Integer, primary_key=True),
+        sqlalchemy.Column('id', sqlalchemy.String(36), primary_key=True),
         sqlalchemy.Column('created_at', sqlalchemy.DateTime),
         sqlalchemy.Column('deleted_at', sqlalchemy.DateTime),
         sqlalchemy.Column('updated_at', sqlalchemy.DateTime),
         sqlalchemy.Column('resource_id', sqlalchemy.String(36),
+                          nullable=False),
+        sqlalchemy.Column('price_type', sqlalchemy.String(255),
                           nullable=False),
         sqlalchemy.Column('order_type', sqlalchemy.String(255),
                           nullable=False),
@@ -84,7 +86,7 @@ def upgrade(migrate_engine):
 
     pay_record = sqlalchemy.Table(
         'pay_record', meta,
-        sqlalchemy.Column('id', sqlalchemy.Integer, primary_key=True),
+        sqlalchemy.Column('id', sqlalchemy.String(36), primary_key=True),
         sqlalchemy.Column('created_at', sqlalchemy.DateTime),
         sqlalchemy.Column('deleted_at', sqlalchemy.DateTime),
         sqlalchemy.Column('updated_at', sqlalchemy.DateTime),
@@ -100,7 +102,7 @@ def upgrade(migrate_engine):
 
     order_acction_record = sqlalchemy.Table(
         'order_acction_record', meta,
-        sqlalchemy.Column('id', sqlalchemy.Integer, primary_key=True),
+        sqlalchemy.Column('id', sqlalchemy.String(36), primary_key=True),
         sqlalchemy.Column('created_at', sqlalchemy.DateTime),
         sqlalchemy.Column('deleted_at', sqlalchemy.DateTime),
         sqlalchemy.Column('updated_at', sqlalchemy.DateTime),
@@ -112,7 +114,7 @@ def upgrade(migrate_engine):
 
     crontab = sqlalchemy.Table(
         'crontab', meta,
-        sqlalchemy.Column('id', sqlalchemy.Integer, primary_key=True),
+        sqlalchemy.Column('id', sqlalchemy.String(36), primary_key=True),
         sqlalchemy.Column('created_at', sqlalchemy.DateTime),
         sqlalchemy.Column('deleted_at', sqlalchemy.DateTime),
         sqlalchemy.Column('updated_at', sqlalchemy.DateTime),
