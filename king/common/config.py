@@ -38,6 +38,14 @@ service_opts = [
     cfg.IntOpt('num_engine_workers',
                help=_('Number of king-engine processes to fork and run.'))]
 
+account_opts = [
+    cfg.IntOpt('periodic_interval',
+               default=60,
+               help=_('Seconds between running periodic tasks.')),
+    cfg.IntOpt('num_account_workers',
+               help=_('Number of king-engine processes to fork and run.'))]
+
+
 engine_opts = [
     cfg.ListOpt('plugin_dirs',
                 default=['/usr/lib64/king', '/usr/lib/king',
@@ -211,6 +219,7 @@ def list_opts():
     yield None, rpc_opts
     yield None, engine_opts
     yield None, service_opts
+    yield None, account_opts
     yield paste_deploy_group.name, paste_deploy_opts
     yield auth_password_group.name, auth_password_opts
     yield revision_group.name, revision_opts
