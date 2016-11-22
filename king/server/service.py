@@ -254,13 +254,6 @@ class EngineService(service.Service):
 
         self.resource_enforcer = policy.ResourceEnforcer()
 
-        if cfg.CONF.trusts_delegated_roles:
-            LOG.warning(_LW('The default value of "trusts_delegated_roles" '
-                            'option in king.conf is changed to [] in Kilo '
-                            'and king will delegate all roles of trustor. '
-                            'Please keep the same if you do not want to '
-                            'delegate subset roles when upgrading.'))
-
     def start(self):
         # engine_id is used to label this engine
         self.engine_id = str(uuid.uuid4())

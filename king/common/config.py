@@ -35,31 +35,6 @@ service_opts = [
     cfg.IntOpt('periodic_interval',
                default=60,
                help=_('Seconds between running periodic tasks.')),
-    cfg.StrOpt('king_metadata_server_url',
-               help=_('URL of the King metadata server. '
-                      'NOTE: Setting this is only needed if you require '
-                      'instances to use a different endpoint than in the '
-                      'keystone catalog')),
-    cfg.StrOpt('king_waitcondition_server_url',
-               help=_('URL of the King waitcondition server.')),
-    cfg.StrOpt('king_watch_server_url',
-               default="",
-               help=_('URL of the King CloudWatch server.')),
-    cfg.StrOpt('instance_connection_is_secure',
-               default="0",
-               help=_('Instance connection to CFN/CW API via https.')),
-    cfg.StrOpt('instance_connection_https_validate_certificates',
-               default="1",
-               help=_('Instance connection to CFN/CW API validate certs if '
-                      'SSL is used.')),
-    cfg.StrOpt('region_name_for_services',
-               help=_('Default region name used to get services endpoints.')),
-    cfg.IntOpt('max_template_size',
-               default=524288,
-               help=_('Maximum raw byte size of any template.')),
-    cfg.IntOpt('max_nested_stack_depth',
-               default=5,
-               help=_('Maximum depth allowed when using nested stacks.')),
     cfg.IntOpt('num_engine_workers',
                help=_('Number of king-engine processes to fork and run.'))]
 
@@ -71,31 +46,10 @@ engine_opts = [
     cfg.StrOpt('environment_dir',
                default='/etc/king/environment.d',
                help=_('The directory to search for environment files.')),
-    cfg.StrOpt('deferred_auth_method',
-               choices=['password', 'trusts'],
-               default='trusts',
-               help=_('Select deferred auth method, '
-                      'stored password or trusts.')),
-    cfg.StrOpt('reauthentication_auth_method',
-               choices=['', 'trusts'],
-               default='',
-               help=_('Allow reauthentication on token expiry, such that'
-                      ' long-running tasks may complete. Note this defeats'
-                      ' the expiry of any provided user tokens.')),
     cfg.IntOpt('stale_token_duration',
                default=30,
                help=_('Gap, in seconds, to determine whether the given token '
                       'is about to expire.'),),
-    cfg.ListOpt('trusts_delegated_roles',
-                default=[],
-                help=_('Subset of trustor roles to be delegated to king.'
-                       ' If left unset, all roles of a user will be'
-                       ' delegated to king when creating a stack.')),
-    cfg.IntOpt('action_retry_limit',
-               default=5,
-               help=_('Number of times to retry to bring a '
-                      'resource to a non-error state. Set to 0 to disable '
-                      'retries.')),
     cfg.IntOpt('event_purge_batch_size',
                default=10,
                help=_("Controls how many events will be pruned whenever a "
@@ -165,24 +119,6 @@ engine_opts = [
                        'list (eg. hidden_stack_tags=hide_me,me_too).')),
     cfg.StrOpt('onready',
                help=_('Deprecated.')),
-    cfg.BoolOpt('stack_scheduler_hints',
-                default=False,
-                help=_('When this feature is enabled, scheduler hints'
-                       ' identifying the king stack context of a server'
-                       ' or volume resource are passed to the configured'
-                       ' schedulers in nova and cinder, for creates done'
-                       ' using king resource types OS::Cinder::Volume,'
-                       ' OS::Nova::Server, and AWS::EC2::Instance.'
-                       ' king_root_stack_id will be set to the id of the'
-                       ' root stack of the resource, king_stack_id will be'
-                       ' set to the id of the resource\'s parent stack,'
-                       ' king_stack_name will be set to the name of the'
-                       ' resource\'s parent stack, king_path_in_stack will'
-                       ' be set to a list of tuples, (stackresourcename,'
-                       ' stackname) with list[0] being (None, rootstackname),'
-                       ' king_resource_name will be set to the resource\'s'
-                       ' name, and king_resource_uuid will be set to the'
-                       ' resource\'s orchestration id.')),
     cfg.BoolOpt('encrypt_parameters_and_properties',
                 default=False,
                 help=_('Encrypt template parameters that were marked as'
@@ -217,19 +153,6 @@ auth_password_opts = [
                 help=_('Allowed keystone endpoints for auth_uri when '
                        'multi_cloud is enabled. At least one endpoint needs '
                        'to be specified.'))]
-
-# these options define the default quota of cinder volume
-cinder_volume_opts = [
-    cfg.IntOpt('volume_num',
-               default=10,
-               help=_('The max num of cinder volume can be created.'
-                      'Default is 10.')),
-    cfg.StrOpt('volume_size',
-               default=102400,
-               help=_('The max MB of cinder volume can be created.'
-                      'Default is 102400 (100GB).'))]
-
-cinder_volume_group = cfg.OptGroup('cinder_volume')
 
 
 # these options define baseline defaults that apply to all clients
@@ -294,7 +217,6 @@ def list_opts():
     yield profiler_group.name, profiler_opts
     yield 'clients', clients_opts
 
-    yield cinder_volume_group.name, cinder_volume_opts
 
     for client in ('barbican', 'ceilometer', 'cinder', 'designate', 'glance',
                    'heat', 'keystone', 'magnum', 'manila', 'mistral',
@@ -309,7 +231,6 @@ def list_opts():
     yield 'clients_cinder', client_http_log_debug_opts
 
 
-cfg.CONF.register_group(cinder_volume_group)
 cfg.CONF.register_group(paste_deploy_group)
 cfg.CONF.register_group(auth_password_group)
 cfg.CONF.register_group(revision_group)
