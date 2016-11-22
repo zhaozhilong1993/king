@@ -72,3 +72,7 @@ def order_create(context, value):
 
 def order_update(context, value):
     return IMPL.order_update(context, value)
+
+
+def price_create(context, value):
+    return IMPL.price_create(context, value)

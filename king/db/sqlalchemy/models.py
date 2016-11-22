@@ -181,6 +181,15 @@ class Price(BASE, KingBase, SoftDelete):
     price_num = sqlalchemy.Column('price_num',
                                   sqlalchemy.Float,
                                   nullable=True)
+    created_at = sqlalchemy.Column('created_at',
+                                   sqlalchemy.DateTime,
+                                   nullable=True)
+    updated_at = sqlalchemy.Column('updated_at',
+                                   sqlalchemy.DateTime,
+                                   nullable=True)
+    deleted_at = sqlalchemy.Column('deleted_at',
+                                   sqlalchemy.DateTime,
+                                   nullable=True)
 
 
 class Order_acction_record(BASE, KingBase, SoftDelete):

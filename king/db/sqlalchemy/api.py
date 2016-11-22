@@ -160,3 +160,11 @@ def update_order(context, value):
     order.update(value)
     order.save(_session(context))
     return order
+
+
+def price_create(context, value):
+    session = get_session()
+    price = models.Price()
+    price.update(value)
+    price.save(session)
+    return price
