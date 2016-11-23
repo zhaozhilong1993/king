@@ -39,7 +39,6 @@ class ServicesController(object):
     def list(self, req):
         """list services"""
         res = service_object.get_all(req.context)
-        import pdb;pdb.set_trace()
         return res
 
 

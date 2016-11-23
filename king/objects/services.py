@@ -42,11 +42,10 @@ class Service(
     @staticmethod
     def _from_db_object(context, service, db_service):
         '''once we finish database action, we need to format the result'''
+        res = {}
         for field in service.fields:
-            service[field] = db_service[field]
-        service._context = context
-        service.obj_reset_changes()
-        return service
+            res[field] = db_service[field]
+        return res
 
     @classmethod
     def _from_db_objects(cls, context, list_obj):
