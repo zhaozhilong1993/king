@@ -53,6 +53,12 @@ class Price(
                 for obj in list_obj]
 
     @classmethod
+    def get_by_id(cls, context, price_id):
+        price_db = db_api.price_get(context, price_id)
+        price = cls._from_db_object(context, cls(), price_db)
+        return price
+
+    @classmethod
     def create(cls, context, values):
         return cls._from_db_object(
             context,

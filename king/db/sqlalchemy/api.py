@@ -177,10 +177,35 @@ def price_create(context, value):
     return price
 
 
+def price_get(context, price_id):
+    query = model_query(context, models.Price)
+    res = query.get(price_id)
+    if res is None:
+        raise exception.EntityNotFound(entity='Price', name=price_id)
+    return res
+
+
+def account_get(context, account_id):
+    query = model_query(context, models.Account)
+    res = query.get(account_id)
+    if res is None:
+        raise exception.EntityNotFound(entity='Account', name=account_id)
+    return res
+
+
 def account_create(context, value):
     value['created_at'] = timeutils.utcnow()
     session = get_session()
     account = models.Account()
     account.update(value)
     account.save(session)
+    return account
+
+
+def account_pay_money(context, account_id, pay_money):
+    account = account_get(context, account_id)
+    value = {'updated_at': timeutils.utcnow(),
+             'account_money': account.account_money - pay_money}
+    account.update(value)
+    account.save(_session(context))
     return account

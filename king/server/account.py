@@ -20,10 +20,12 @@ import six
 import uuid
 from king.common import context
 from king.rpc import api as rpc_api
+from king.objects import account as account_object
+from king.objects import price as price_object
+from king.objects import order as order_object
 from king.objects import services as services_object
 from king.common.i18n import _LE
 from king.common.i18n import _LI
-from king.common.i18n import _LW
 from king.common import messaging as rpc_messaging
 from king.common import policy
 from king.common import service_utils
@@ -251,6 +253,10 @@ class AccountService(service.Service):
         self.service_id = None
         self.manage_thread_grp = None
         self._rpc_server = None
+        self.service = services_object.Service()
+        self.order = order_object.Order()
+        self.price = price_object.Price()
+        self.account = account_object.Account()
 
         self.resource_enforcer = policy.ResourceEnforcer()
 
@@ -262,7 +268,7 @@ class AccountService(service.Service):
             self.thread_group_mgr = ThreadGroupManager()
         # start rpc listen from other engine
         self.listener = AccountListener(self.host, self.engine_id,
-                                       self.thread_group_mgr)
+                                        self.thread_group_mgr)
         LOG.debug("Starting listener for engine %s" % self.engine_id)
         self.listener.start()
 
@@ -348,6 +354,11 @@ class AccountService(service.Service):
         result['services'] = services_list
         return result
 
+    @context.request_context
+    def pay_money(self, cnxt, account_id, pay_money):
+        self.account.pay(None, account_id, pay_money)
+        LOG.debug(_LI("Pay: Account %s pay %s" % (account_id, pay_money)))
+
     def service_manage_report(self):
         cnxt = context.get_admin_context()
 
@@ -393,7 +404,5 @@ class AccountService(service.Service):
                 continue
             if service_ref['updated_at'] < last_update_time:
                 # maybe service is dead
-                LOG.info(_LI("service engine %(engine)s is dead "
-                             "or in some bad status",
-                             {'engine': service_ref['engine_id']}))
+                LOG.info(_LI("Engine %s is dead." % service_ref['engine_id']))
                 services_object.Service.delete(cnxt, service_ref['id'])

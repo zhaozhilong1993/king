@@ -58,3 +58,10 @@ class Account(
             context,
             cls(),
             db_api.account_create(context, values))
+
+    @classmethod
+    def pay(cls, context, account_id, pay_money):
+        return cls._from_db_object(
+            context,
+            cls(),
+            db_api.account_pay_money(context, account_id, pay_money))

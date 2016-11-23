@@ -21,11 +21,13 @@ import uuid
 from apscheduler.schedulers.blocking import BlockingScheduler
 from king.common import context
 from king.rpc import api as rpc_api
+from king.rpc import client as rpc_client
 from king.objects import services as services_object
+from king.objects import account as account_object
 from king.objects import order as order_object
+from king.objects import price as price_object
 from king.common.i18n import _LE
 from king.common.i18n import _LI
-from king.common.i18n import _LW
 from king.common import messaging as rpc_messaging
 from king.common import policy
 from king.common import service_utils
@@ -241,10 +243,10 @@ class EngineService(service.Service):
         self.topic = topic
         self.process = 'king-server'
         self.hostname = socket.gethostname()
+        self.context = context.RequestContext()
 
         # The following are initialized here, but assigned in start() which
         # happens after the fork when spawning multiple worker processes
-        self.stack_watch = None
         self.listener = None
         self.worker_service = None
         self.engine_id = None
@@ -253,8 +255,12 @@ class EngineService(service.Service):
         self.service_id = None
         self.manage_thread_grp = None
         self._rpc_server = None
+        self.rpc_client = rpc_client.EngineClient()
         self.scheduler = BlockingScheduler()
         self.order = order_object.Order()
+        self.price = price_object.Price()
+        self.account = account_object.Account()
+        self.deduction_interval = cfg.CONF.deduction_interval
 
         self.resource_enforcer = policy.ResourceEnforcer()
 
@@ -306,17 +312,29 @@ class EngineService(service.Service):
         return self.order.get_all(None)
 
     def inition_cron_task(self):
-        LOG.debug("Inition crontab job")
-        for task in self._from_db_get_all_order():
-            # check the order
-            self.scheduler.add_job(self.cron_task,
-                                   'cron',
-                                   second='*/10',
-                                   hour='*')
+        LOG.debug("Interval: %s. Running Now." % self.deduction_interval)
 
-    def cron_task(self):
-        # count
-        pass
+        for order in self._from_db_get_all_order():
+            # check the order
+            self.scheduler.add_job(func=self.cron_task,
+                                   args=(order,),
+                                   trigger='cron',
+                                   second='*/%s' % self.deduction_interval,
+                                   hour="*")
+            LOG.debug("Deduction task of order: %s is Ready." % order.id)
+        self.scheduler.start()
+
+    def count_pay(self, order):
+        unit_price = self.price.get_by_id(None, order.price_id).price_num
+        period_price = float(unit_price * self.deduction_interval)
+        return period_price
+
+    def cron_task(self, order):
+        LOG.debug("Deduction task of %s Running." % order.id)
+        pay_money = self.count_pay(order)
+        self.rpc_client.account_pay_money(self.context,
+                                          order.account_id,
+                                          pay_money)
 
     def _stop_rpc_server(self):
         # Stop rpc connection at first for preventing new requests

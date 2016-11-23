@@ -82,5 +82,13 @@ def price_create(context, value):
     return IMPL.price_create(context, value)
 
 
+def price_get(context, price_id):
+    return IMPL.price_get(context, price_id)
+
+
 def account_create(context, value):
     return IMPL.account_create(context, value)
+
+
+def account_pay_money(context, account_id, pay_money):
+    return IMPL.account_pay_money(context, account_id, pay_money)

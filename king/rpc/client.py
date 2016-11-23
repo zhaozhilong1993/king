@@ -64,3 +64,13 @@ class EngineClient(object):
         """
         return self.call(ctxt, self.make_msg('list_services'),
                          version='1.0')
+
+    def account_pay_money(self, ctxt, account_id, pay_money):
+        """Pay the bill
+        :param ctxt: RPC context.
+        """
+        return self.call(ctxt,
+                         self.make_msg('pay_money',
+                                       account_id=account_id,
+                                       pay_money=pay_money),
+                         version='1.0')

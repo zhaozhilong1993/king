@@ -35,6 +35,9 @@ service_opts = [
     cfg.IntOpt('periodic_interval',
                default=60,
                help=_('Seconds between running periodic tasks.')),
+    cfg.IntOpt('deduction_interval',
+               default=30,
+               help=_('Seconds between running deduction tasks.')),
     cfg.IntOpt('num_engine_workers',
                help=_('Number of king-engine processes to fork and run.'))]
 
@@ -225,7 +228,6 @@ def list_opts():
     yield revision_group.name, revision_opts
     yield profiler_group.name, profiler_opts
     yield 'clients', clients_opts
-
 
     for client in ('barbican', 'ceilometer', 'cinder', 'designate', 'glance',
                    'heat', 'keystone', 'magnum', 'manila', 'mistral',
