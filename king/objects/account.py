@@ -65,3 +65,10 @@ class Account(
             context,
             cls(),
             db_api.account_pay_money(context, account_id, pay_money))
+
+    @classmethod
+    def recharge(cls, context, value):
+        return cls._from_db_object(
+            context,
+            cls(),
+            db_api.account_recharge_money(context, value))

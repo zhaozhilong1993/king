@@ -209,3 +209,20 @@ def account_pay_money(context, account_id, pay_money):
     account.update(value)
     account.save(_session(context))
     return account
+
+
+def account_recharge_money(context, data):
+    account = account_get(context, data['account_id'])
+    value = {'updated_at': timeutils.utcnow(),
+             'account_money': account.account_money + data['recharge']}
+    account.update(value)
+    account.save(_session(context))
+    recharge_record(context, data)
+    return account
+
+
+def recharge_record(context, data):
+    session = get_session()
+    recharge_record = models.Recharge_record()
+    recharge_record.update(data)
+    recharge_record.save(session)

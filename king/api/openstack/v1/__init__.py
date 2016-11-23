@@ -149,7 +149,7 @@ class API(wsgi.Router):
                     },
                     {
                         'name': 'recharge_account',
-                        'url': '/account/{account_name}/recharge',
+                        'url': '/account/recharge',
                         'action': 'recharge',
                         'method': 'POST'
                     },

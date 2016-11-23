@@ -43,7 +43,6 @@ class AccountController(object):
 
     @util.policy_enforce
     def create(self, req, body):
-        pass
         body_str = req.body
         try:
             body = json.loads(body_str)
@@ -63,7 +62,7 @@ class AccountController(object):
                                                               body['account']))
             return res
         else:
-            msg = _("Post data error: key order not found")
+            msg = _("Post data error: key account not found")
 
     @util.policy_enforce
     def list(self, req, body):
@@ -71,7 +70,29 @@ class AccountController(object):
 
     @util.policy_enforce
     def recharge(self, req, body):
-        pass
+        body_str = req.body
+        try:
+            body = json.loads(body_str)
+        except ValueError as ex:
+            msg = _("Post data error: %s") % ex
+            raise exc.HTTPBadRequest(six.text_type(msg))
+        if 'account' in body:
+            try:
+                if body['account']['recharge'] is None:
+                    msg = _("Post data error: recharge_num can not be null")
+                    raise exc.HTTPBadRequest(six.text_type(msg))
+                value = {"account_id": body['account']['account_id'],
+                         "recharge": float(body['account']['recharge']),
+                         "recharge_method": body['account']['recharge_method'],
+                         "recharge_comment": body['account']['recharge_comment']}
+            except KeyError as ex:
+                msg = _("Post data error: some key not be found")
+                raise exc.HTTPBadRequest(six.text_type(msg))
+            res = service_utils.to_dict(account_object.recharge(req.context,
+                                                                value))
+            return res
+        else:
+            msg = _("Post data error: key account not found")
 
     @util.policy_enforce
     def update_level(self, req, body):

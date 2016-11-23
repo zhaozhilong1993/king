@@ -95,7 +95,6 @@ def upgrade(migrate_engine):
                           nullable=False),
         sqlalchemy.Column('pay_action', sqlalchemy.String(255)),
         sqlalchemy.Column('pay', sqlalchemy.Float),
-        sqlalchemy.Column('recharge', sqlalchemy.Float),
         mysql_engine='InnoDB',
         mysql_charset='utf8',
     )

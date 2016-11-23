@@ -240,9 +240,36 @@ class Pay_record(BASE, KingBase, SoftDelete):
     pay = sqlalchemy.Column('pay',
                             sqlalchemy.Float,
                             nullable=True)
+
+
+class Recharge_record(BASE, KingBase, SoftDelete):
+    __tablename__ = 'recharge_record'
+
+    id = sqlalchemy.Column('id',
+                           sqlalchemy.String(36),
+                           primary_key=True,
+                           default=lambda: str(uuid.uuid4()))
+    account_id = sqlalchemy.Column('account_id',
+                                   sqlalchemy.String(36),
+                                   nullable=False)
+    recharge_method = sqlalchemy.Column('recharge_method',
+                                        sqlalchemy.String(255),
+                                        nullable=False)
+    recharge_commend = sqlalchemy.Column('recharge_commend',
+                                         sqlalchemy.String(255),
+                                         nullable=True)
     recharge = sqlalchemy.Column('recharge',
                                  sqlalchemy.Float,
                                  nullable=True)
+    created_at = sqlalchemy.Column('created_at',
+                                   sqlalchemy.DateTime,
+                                   nullable=True)
+    updated_at = sqlalchemy.Column('updated_at',
+                                   sqlalchemy.DateTime,
+                                   nullable=True)
+    deleted_at = sqlalchemy.Column('deleted_at',
+                                   sqlalchemy.DateTime,
+                                   nullable=True)
 
 
 class Crontab(BASE, KingBase, SoftDelete):
