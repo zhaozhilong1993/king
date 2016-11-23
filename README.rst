@@ -2,7 +2,7 @@
 King
 ====
 
-King is a media compressed system.
+King is a OpenStack bill system.
 
 
 Getting Started
@@ -18,9 +18,9 @@ Python client
 https://github.com/zhaozhilong1993/python-kingclient
 
 
-Use Api 
+Use Api
 -------------
-/v1/condense 
-/v1/enqueue
-/v1/out
-/v1/{meida_id}/status
+/v1/order
+/v1/account
+/v1/price
+/v1/services
