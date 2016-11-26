@@ -75,7 +75,7 @@ def upgrade(migrate_engine):
         sqlalchemy.Column('updated_at', sqlalchemy.DateTime),
         sqlalchemy.Column('resource_id', sqlalchemy.String(36),
                           nullable=False),
-        sqlalchemy.Column('price_type', sqlalchemy.String(255),
+        sqlalchemy.Column('resource_type', sqlalchemy.String(255),
                           nullable=False),
         sqlalchemy.Column('order_type', sqlalchemy.String(255),
                           nullable=False),
@@ -99,14 +99,18 @@ def upgrade(migrate_engine):
         mysql_charset='utf8',
     )
 
-    order_acction_record = sqlalchemy.Table(
-        'order_acction_record', meta,
+    acction_record = sqlalchemy.Table(
+        'acction_record', meta,
         sqlalchemy.Column('id', sqlalchemy.String(36), primary_key=True),
         sqlalchemy.Column('created_at', sqlalchemy.DateTime),
         sqlalchemy.Column('deleted_at', sqlalchemy.DateTime),
         sqlalchemy.Column('updated_at', sqlalchemy.DateTime),
-        sqlalchemy.Column('order_status_now', sqlalchemy.String(255)),
-        sqlalchemy.Column('order_status_change_to', sqlalchemy.String(255)),
+        sqlalchemy.Column('resource_id', sqlalchemy.String(36),
+                          nullable=False),
+        sqlalchemy.Column('resource_type', sqlalchemy.String(255),
+                          nullable=False),
+        sqlalchemy.Column('action', sqlalchemy.String(255),
+                          nullable=False),
         mysql_engine='InnoDB',
         mysql_charset='utf8',
     )
@@ -128,7 +132,7 @@ def upgrade(migrate_engine):
         order,
         account,
         price,
-        order_acction_record,
+        acction_record,
         pay_record,
         crontab
     )

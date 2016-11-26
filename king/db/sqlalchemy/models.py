@@ -203,22 +203,31 @@ class Price(BASE, KingBase, SoftDelete):
                                    nullable=True)
 
 
-class Order_acction_record(BASE, KingBase, SoftDelete):
-    __tablename__ = 'order_acction_record'
+class Acction_record(BASE, KingBase, SoftDelete):
+    __tablename__ = 'acction_record'
 
     id = sqlalchemy.Column('id',
                            sqlalchemy.String(36),
                            primary_key=True,
                            default=lambda: str(uuid.uuid4()))
-    order_id = sqlalchemy.Column('order_id',
+    resource_id = sqlalchemy.Column('resource_id',
                                  sqlalchemy.String(36),
                                  nullable=False)
-    order_status_now = sqlalchemy.Column('order_status_now',
-                                         sqlalchemy.String(255),
-                                         nullable=True)
-    order_status_change_to = sqlalchemy.Column('order_status_change_to',
-                                               sqlalchemy.String(255),
-                                               nullable=True)
+    created_at = sqlalchemy.Column('created_at',
+                                   sqlalchemy.DateTime,
+                                   nullable=True)
+    updated_at = sqlalchemy.Column('updated_at',
+                                   sqlalchemy.DateTime,
+                                   nullable=True)
+    deleted_at = sqlalchemy.Column('deleted_at',
+                                   sqlalchemy.DateTime,
+                                   nullable=True)
+    resource_type = sqlalchemy.Column('resource_type',
+                                      sqlalchemy.String(255),
+                                      nullable=True)
+    action = sqlalchemy.Column('action',
+                               sqlalchemy.String(255),
+                               nullable=True)
 
 
 class Pay_record(BASE, KingBase, SoftDelete):
