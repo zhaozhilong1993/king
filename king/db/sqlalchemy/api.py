@@ -208,6 +208,7 @@ def account_pay_money(context, account_id, pay_money):
              'account_money': account.account_money - pay_money}
     account.update(value)
     account.save(_session(context))
+    pay_record(context, {})
     return account
 
 
@@ -226,3 +227,11 @@ def recharge_record(context, data):
     recharge_record = models.Recharge_record()
     recharge_record.update(data)
     recharge_record.save(session)
+
+
+def pay_record(context, value):
+    pass
+
+
+def action_record(context, value):
+    pass

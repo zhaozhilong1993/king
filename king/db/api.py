@@ -96,3 +96,7 @@ def account_pay_money(context, account_id, pay_money):
 
 def account_recharge_money(context, value):
     return IMPL.account_recharge_money(context, value)
+
+
+def action_record(context, value):
+    return IMPL.action_record(context, value)

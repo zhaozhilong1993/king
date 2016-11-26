@@ -16,6 +16,7 @@ import six
 
 from king.common import wsgi
 from king.api.openstack.v1 import account
+from king.api.openstack.v1 import action
 from king.api.openstack.v1 import order
 from king.api.openstack.v1 import price
 from king.api.openstack.v1 import services
@@ -191,5 +192,19 @@ class API(wsgi.Router):
                         'method': 'POST'
                     }
                 ])
+
+        # action
+        action_resource = action.create_resource(conf)
+        connect(controller=account_resource,
+                # path_prefix='/{tenant_id}',
+                path_prefix='',
+                routes=[
+                    {
+                        'name': 'create_action',
+                        'url': '/action',
+                        'action': 'create',
+                    }
+                ])
+
         # now that all the routes are defined, add a handler for
         super(API, self).__init__(mapper)

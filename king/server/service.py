@@ -308,6 +308,12 @@ class EngineService(service.Service):
         self.inition_cron_task()
         super(EngineService, self).start()
 
+    def _check_order_status(self, order):
+        pass
+
+    def _check_order_deduction(self, order):
+        pass
+
     def _from_db_get_all_order(self):
         return self.order.get_all(None)
 
@@ -315,7 +321,8 @@ class EngineService(service.Service):
         LOG.debug("Interval: %s. Running Now." % self.deduction_interval)
 
         for order in self._from_db_get_all_order():
-            # check the order
+            _check_order_status(order)
+            _check_order_deduction(order)
             self.scheduler.add_job(func=self.cron_task,
                                    args=(order,),
                                    trigger='cron',
