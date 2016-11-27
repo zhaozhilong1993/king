@@ -195,7 +195,7 @@ class API(wsgi.Router):
 
         # action
         action_resource = action.create_resource(conf)
-        connect(controller=account_resource,
+        connect(controller=action_resource,
                 # path_prefix='/{tenant_id}',
                 path_prefix='',
                 routes=[

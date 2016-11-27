@@ -211,8 +211,8 @@ class Acction_record(BASE, KingBase, SoftDelete):
                            primary_key=True,
                            default=lambda: str(uuid.uuid4()))
     resource_id = sqlalchemy.Column('resource_id',
-                                 sqlalchemy.String(36),
-                                 nullable=False)
+                                    sqlalchemy.String(36),
+                                    nullable=False)
     created_at = sqlalchemy.Column('created_at',
                                    sqlalchemy.DateTime,
                                    nullable=True)

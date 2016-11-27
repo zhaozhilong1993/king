@@ -12,20 +12,12 @@
 #    under the License.
 
 """action endpoint for King v1 REST API."""
-import json
-import six
-from webob import exc
-
 from king.api.openstack.v1 import util
 from king.common import serializers
-from king.common import service_utils
 from king.common import wsgi
-
-from king.common.i18n import _
 
 
 from king.rpc import client as rpc_client
-from king.objects.action import Action as action_object
 
 from oslo_log import log as logging
 

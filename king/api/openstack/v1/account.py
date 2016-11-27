@@ -78,13 +78,11 @@ class AccountController(object):
             raise exc.HTTPBadRequest(six.text_type(msg))
         if 'account' in body:
             try:
-                if body['account']['recharge'] is None:
+                value = body['account']
+                if value['recharge'] is None:
                     msg = _("Post data error: recharge_num can not be null")
                     raise exc.HTTPBadRequest(six.text_type(msg))
-                value = {"account_id": body['account']['account_id'],
-                         "recharge": float(body['account']['recharge']),
-                         "recharge_method": body['account']['recharge_method'],
-                         "recharge_comment": body['account']['recharge_comment']}
+                value["recharge"] = float(value['recharge'])
             except KeyError as ex:
                 msg = _("Post data error: some key not be found")
                 raise exc.HTTPBadRequest(six.text_type(msg))
