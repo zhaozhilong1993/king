@@ -233,5 +233,10 @@ def pay_record(context, value):
     pass
 
 
-def action_record(context, value):
-    pass
+def action_record(context, data):
+    data['created_at'] = timeutils.utcnow()
+    session = get_session()
+    action_record = models.Action_record()
+    action_record.update(data)
+    action_record.save(session)
+    return action_record

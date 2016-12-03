@@ -203,8 +203,8 @@ class Price(BASE, KingBase, SoftDelete):
                                    nullable=True)
 
 
-class Acction_record(BASE, KingBase, SoftDelete):
-    __tablename__ = 'acction_record'
+class Action_record(BASE, KingBase, SoftDelete):
+    __tablename__ = 'action_record'
 
     id = sqlalchemy.Column('id',
                            sqlalchemy.String(36),
@@ -213,6 +213,12 @@ class Acction_record(BASE, KingBase, SoftDelete):
     resource_id = sqlalchemy.Column('resource_id',
                                     sqlalchemy.String(36),
                                     nullable=False)
+    user_id = sqlalchemy.Column('user_id',
+                                sqlalchemy.String(36),
+                                nullable=False)
+    project_id = sqlalchemy.Column('project_id',
+                                   sqlalchemy.String(36),
+                                   nullable=False)
     created_at = sqlalchemy.Column('created_at',
                                    sqlalchemy.DateTime,
                                    nullable=True)

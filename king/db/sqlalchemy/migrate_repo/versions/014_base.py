@@ -101,13 +101,17 @@ def upgrade(migrate_engine):
         mysql_charset='utf8',
     )
 
-    acction_record = sqlalchemy.Table(
-        'acction_record', meta,
+    action_record = sqlalchemy.Table(
+        'action_record', meta,
         sqlalchemy.Column('id', sqlalchemy.String(36), primary_key=True),
         sqlalchemy.Column('created_at', sqlalchemy.DateTime),
-        sqlalchemy.Column('deleted_at', sqlalchemy.DateTime),
         sqlalchemy.Column('updated_at', sqlalchemy.DateTime),
+        sqlalchemy.Column('deleted_at', sqlalchemy.DateTime),
         sqlalchemy.Column('resource_id', sqlalchemy.String(36),
+                          nullable=False),
+        sqlalchemy.Column('project_id', sqlalchemy.String(36),
+                          nullable=False),
+        sqlalchemy.Column('user_id', sqlalchemy.String(36),
                           nullable=False),
         sqlalchemy.Column('resource_type', sqlalchemy.String(255),
                           nullable=False),
@@ -134,7 +138,7 @@ def upgrade(migrate_engine):
         order,
         account,
         price,
-        acction_record,
+        action_record,
         pay_record,
         crontab
     )
