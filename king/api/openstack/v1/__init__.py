@@ -203,6 +203,7 @@ class API(wsgi.Router):
                         'name': 'create_action',
                         'url': '/action',
                         'action': 'create',
+                        'method': 'POST'
                     }
                 ])
 
