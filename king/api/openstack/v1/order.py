@@ -72,8 +72,8 @@ class OrderController(object):
                 if body['order']['price_id'] is None:
                     msg = _("Post data error: price_id can not be null")
                     raise exc.HTTPBadRequest(six.text_type(msg))
-                if body['order']['account_id'] is None:
-                    msg = _("Post data error: account_id can not be null")
+                if body['order']['project_id'] is None:
+                    msg = _("Post data error: project_id can not be null")
                     raise exc.HTTPBadRequest(six.text_type(msg))
             except KeyError as ex:
                     msg = _("Post data error: some key not be found")
