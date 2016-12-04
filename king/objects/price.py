@@ -28,7 +28,7 @@ class Price(
 ):
     fields = {
         'id': fields.StringField(),
-        'price_type': fields.StringField(),
+        'resource_type': fields.StringField(),
         'resource_id': fields.StringField(),
         'order_type': fields.StringField(),
         'price_num': fields.FloatField(),

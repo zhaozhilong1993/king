@@ -7,6 +7,7 @@
   "account:recharge": "",
 
   "order:create": "",
+  "order:list": "",
   "price:create": "",
 
   "services:list": ""

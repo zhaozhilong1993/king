@@ -56,7 +56,7 @@ def main():
     srv = account.AccountService(cfg.CONF.host, rpc_api.ENGINE_TOPIC)
     workers = cfg.CONF.num_account_workers
     if not workers:
-        workers = max(4, processutils.get_worker_count())
+        workers = max(1, processutils.get_worker_count())
 
     launcher = service.launch(cfg.CONF, srv, workers=workers)
 

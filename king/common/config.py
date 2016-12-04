@@ -36,8 +36,11 @@ service_opts = [
                default=60,
                help=_('Seconds between running periodic tasks.')),
     cfg.IntOpt('deduction_interval',
-               default=30,
+               default=60,
                help=_('Seconds between running deduction tasks.')),
+    cfg.StrOpt('region_name_for_services',
+               default="RegionOne",
+               help=_('Default region name used to get services endpoints.')),
     cfg.IntOpt('num_engine_workers',
                help=_('Number of king-engine processes to fork and run.'))]
 
@@ -193,6 +196,11 @@ king_client_opts = [
                       ' http://0.0.0.0:9000/v1/%(tenant_id)s.'))]
 
 keystone_client_opts = [
+    cfg.StrOpt('endpoint_type',
+               default='publicURL',
+               help=_(
+                   'Type of endpoint in Identity service catalog to use '
+                   'for communication with the OpenStack service.')),
     cfg.StrOpt('auth_uri',
                default='',
                help=_('Unversioned keystone url in format like'

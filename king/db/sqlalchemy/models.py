@@ -118,7 +118,7 @@ class Order(BASE, KingBase, SoftDelete):
     resource_id = sqlalchemy.Column('resource_id',
                                     sqlalchemy.String(36),
                                     nullable=False)
-    account_id = sqlalchemy.Column('account_id',
+    project_id = sqlalchemy.Column('project_id',
                                    sqlalchemy.String(36),
                                    nullable=False)
     price_id = sqlalchemy.Column('price_id',
@@ -180,9 +180,9 @@ class Price(BASE, KingBase, SoftDelete):
                            sqlalchemy.String(36),
                            primary_key=True,
                            default=lambda: str(uuid.uuid4()))
-    price_type = sqlalchemy.Column('price_type',
-                                   sqlalchemy.String(36),
-                                   nullable=False)
+    resource_type = sqlalchemy.Column('resource_type',
+                                      sqlalchemy.String(36),
+                                      nullable=False)
     resource_id = sqlalchemy.Column('resource_id',
                                     sqlalchemy.String(36),
                                     nullable=False)

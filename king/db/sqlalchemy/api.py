@@ -185,11 +185,11 @@ def price_get(context, price_id):
     return res
 
 
-def account_get(context, account_id):
+def account_get(context, user_id):
     query = model_query(context, models.Account)
-    res = query.get(account_id)
+    res = query.get(user_id)
     if res is None:
-        raise exception.EntityNotFound(entity='Account', name=account_id)
+        raise exception.EntityNotFound(entity='Account', name=user_id)
     return res
 
 

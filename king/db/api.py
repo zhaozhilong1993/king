@@ -86,6 +86,10 @@ def price_get(context, price_id):
     return IMPL.price_get(context, price_id)
 
 
+def account_get(context, user_id):
+    return IMPL.account_get(context, user_id)
+
+
 def account_create(context, value):
     return IMPL.account_create(context, value)
 

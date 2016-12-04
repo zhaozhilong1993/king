@@ -340,7 +340,7 @@ class EngineService(service.Service):
         LOG.debug("Deduction task of %s Running." % order.id)
         pay_money = self.count_pay(order)
         self.rpc_client.account_pay_money(self.context,
-                                          order.account_id,
+                                          order.project_id,
                                           pay_money)
 
     def _stop_rpc_server(self):

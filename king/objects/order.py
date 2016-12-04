@@ -29,7 +29,7 @@ class Order(
     fields = {
         'id': fields.StringField(),
         'resource_id': fields.StringField(),
-        'account_id': fields.StringField(),
+        'project_id': fields.StringField(),
         'price_id': fields.StringField(),
         'order_status': fields.StringField(),
         'order_type': fields.StringField(),

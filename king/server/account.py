@@ -18,6 +18,7 @@ import oslo_messaging as messaging
 import socket
 import six
 import uuid
+from king.server.keystone import Keystone as keystone
 from king.common import context
 from king.rpc import api as rpc_api
 from king.objects import account as account_object
@@ -355,9 +356,11 @@ class AccountService(service.Service):
         return result
 
     @context.request_context
-    def pay_money(self, cnxt, account_id, pay_money):
-        self.account.pay(None, account_id, pay_money)
-        LOG.debug(_LI("Pay: Account %s pay %s" % (account_id, pay_money)))
+    def pay_money(self, cnxt, project_id, pay_money):
+        user_id = keystone(cnxt).get_payer_id(project_id)
+        account = self.account.get(cnxt, user_id)
+        self.account.pay(None, account.id, pay_money)
+        LOG.debug(_LI("Pay: Account %s pay %s" % (account.id, pay_money)))
 
     def service_manage_report(self):
         cnxt = context.get_admin_context()

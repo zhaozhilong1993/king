@@ -494,3 +494,17 @@ class DBDataNotFound(KingException):
 
     def __init__(self):
         super(QuotaNotEnough, self).__init__()
+
+
+class RolePayerNotFound(KingException):
+    msg_fmt = _("Keystone role: payer is not found.")
+
+    def __init__(self):
+        super(RolePayerNotFound, self).__init__()
+
+
+class ProjectPayerNotFound(KingException):
+    msg_fmt = _("Project payer is not found.")
+
+    def __init__(self):
+        super(ProjectPayerNotFound, self).__init__()

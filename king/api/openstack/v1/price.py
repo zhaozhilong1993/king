@@ -75,8 +75,8 @@ class PriceController(object):
                 msg = _("Post data error: some key not be found")
                 raise exc.HTTPBadRequest(six.text_type(msg))
             # create price template
-            if body['price']['price_type'] == 'disk' or \
-                    body['price']['price_type'] == 'floating_ip':
+            if body['price']['resource_type'] == 'disk' or \
+                    body['price']['resource_type'] == 'floating_ip':
                 body['price']['resource_id'] = 'UNUSE'
             return service_utils.to_dict(price_object.create(req.context,
                                                              body['price']))
