@@ -60,11 +60,11 @@ class Account(
             db_api.account_create(context, values))
 
     @classmethod
-    def pay(cls, context, account_id, pay_money):
+    def pay(cls, context, user_id, pay_money):
         return cls._from_db_object(
             context,
             cls(),
-            db_api.account_pay_money(context, account_id, pay_money))
+            db_api.account_pay_money(context, user_id, pay_money))
 
     @classmethod
     def recharge(cls, context, value):
@@ -78,4 +78,4 @@ class Account(
         return cls._from_db_object(
             context,
             cls(),
-            db_api.account_get_from(context, user_id))
+            db_api.account_get(context, user_id))

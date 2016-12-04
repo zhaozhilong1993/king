@@ -54,9 +54,8 @@ class BaseKeystone(client_plugin.ClientPlugin):
             raise exception.RolePayerNotFound()
 
         payer = kc.role_assignments.list(project=project_id,
-                                         role=payer_role)
+                                         role=payer_role[0])
         if not payer:
             LOG.error(_LI("Project: %s Not found a payer." % project_id))
             raise exception.ProjectPayerNotFound()
-
         return payer[0].user['id']

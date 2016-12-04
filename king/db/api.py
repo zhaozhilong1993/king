@@ -94,8 +94,8 @@ def account_create(context, value):
     return IMPL.account_create(context, value)
 
 
-def account_pay_money(context, account_id, pay_money):
-    return IMPL.account_pay_money(context, account_id, pay_money)
+def account_pay_money(context, user_id, pay_money):
+    return IMPL.account_pay_money(context, user_id, pay_money)
 
 
 def account_recharge_money(context, value):
