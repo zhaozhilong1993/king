@@ -341,6 +341,7 @@ class EngineService(service.Service):
         pay_money = self.count_pay(order)
         self.account_rpc_client.account_pay_money(self.context,
                                                   order.project_id,
+                                                  order.id,
                                                   pay_money)
 
     def _stop_rpc_server(self):

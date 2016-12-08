@@ -26,7 +26,6 @@ from king.common import service_utils
 from king.common import wsgi
 
 from king.objects.price import Price as price_object
-from king.rpc import client as rpc_client
 
 
 LOG = logging.getLogger(__name__)
@@ -42,7 +41,6 @@ class PriceController(object):
 
     def __init__(self, options):
         self.options = options
-        self.rpc_client = rpc_client.EngineClient()
 
     @util.policy_enforce
     def list(self, req):

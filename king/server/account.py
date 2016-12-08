@@ -356,10 +356,10 @@ class AccountService(service.Service):
         return result
 
     @context.request_context
-    def pay_money(self, cnxt, project_id, pay_money):
-        LOG.debug(_LI("Project %s should pay %s" % (project_id, pay_money)))
+    def pay_money(self, cnxt, project_id, order_id, pay_money):
+        LOG.debug("Project %s should pay %s" % (project_id, pay_money))
         user_id = keystone(cnxt).get_payer_id(project_id)
-        self.account.pay(None, user_id, pay_money)
+        self.account.pay(None, user_id, project_id, order_id, pay_money)
         LOG.debug(_LI("Pay: User %s have paid %s" % (user_id, pay_money)))
 
     def service_manage_report(self):

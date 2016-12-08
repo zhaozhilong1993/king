@@ -202,13 +202,19 @@ def account_create(context, value):
     return account
 
 
-def account_pay_money(context, user_id, pay_money):
+def account_pay_money(context, user_id, project_id,
+                      order_id, pay_money, pay_action=None):
     account = account_get(context, user_id)
     value = {'updated_at': timeutils.utcnow(),
              'account_money': account.account_money - pay_money}
     account.update(value)
     account.save(_session(context))
-    pay_record(context, {})
+    pay_record(context, {'order_id': order_id,
+                         'user_id': user_id,
+                         'project_id': project_id,
+                         'pay_action': pay_action,
+                         'pay': pay_money,
+                         'created_at': value['updated_at']})
     return account
 
 
@@ -230,7 +236,11 @@ def recharge_record(context, data):
 
 
 def pay_record(context, value):
-    pass
+    session = get_session()
+    pay_record = models.Pay_record()
+    pay_record.update(value)
+    pay_record.save(session)
+    return pay_record
 
 
 def action_record(context, data):

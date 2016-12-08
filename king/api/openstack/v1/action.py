@@ -23,7 +23,6 @@ from king.common import wsgi
 
 from king.common.i18n import _
 
-from king.rpc import client as rpc_client
 from king.objects.action import Action as action_object
 
 from oslo_log import log as logging
@@ -41,7 +40,6 @@ class ActionController(object):
 
     def __init__(self, options):
         self.options = options
-        self.rpc_client = rpc_client.EngineClient()
 
     @util.policy_enforce
     def list(self, req):

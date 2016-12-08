@@ -91,7 +91,7 @@ def upgrade(migrate_engine):
         sqlalchemy.Column('deleted_at', sqlalchemy.DateTime),
         sqlalchemy.Column('updated_at', sqlalchemy.DateTime),
         sqlalchemy.Column('order_id', sqlalchemy.String(36), nullable=False),
-        sqlalchemy.Column('account_id', sqlalchemy.String(36),
+        sqlalchemy.Column('user_id', sqlalchemy.String(36),
                           nullable=False),
         sqlalchemy.Column('project_id', sqlalchemy.String(36),
                           nullable=False),

@@ -501,4 +501,7 @@ class RolePayerNotFound(KingException):
 
 
 class ProjectPayerNotFound(KingException):
-    msg_fmt = _("The role 'payer' is not found in project.")
+    msg_fmt = _("The role 'payer' is not found in project:%(project)s.")
+
+    def __init__(self, project='None'):
+        super(ProjectPayerNotFound, self).__init__(project=project)

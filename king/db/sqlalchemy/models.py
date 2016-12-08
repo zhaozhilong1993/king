@@ -246,7 +246,10 @@ class Pay_record(BASE, KingBase, SoftDelete):
     order_id = sqlalchemy.Column('order_id',
                                  sqlalchemy.String(36),
                                  nullable=False)
-    account_id = sqlalchemy.Column('account_id',
+    user_id = sqlalchemy.Column('user_id',
+                                sqlalchemy.String(36),
+                                nullable=False)
+    project_id = sqlalchemy.Column('project_id',
                                    sqlalchemy.String(36),
                                    nullable=False)
     pay_action = sqlalchemy.Column('pay_action',
@@ -255,6 +258,15 @@ class Pay_record(BASE, KingBase, SoftDelete):
     pay = sqlalchemy.Column('pay',
                             sqlalchemy.Float,
                             nullable=True)
+    created_at = sqlalchemy.Column('created_at',
+                                   sqlalchemy.DateTime,
+                                   nullable=True)
+    updated_at = sqlalchemy.Column('updated_at',
+                                   sqlalchemy.DateTime,
+                                   nullable=True)
+    deleted_at = sqlalchemy.Column('deleted_at',
+                                   sqlalchemy.DateTime,
+                                   nullable=True)
 
 
 class Recharge_record(BASE, KingBase, SoftDelete):
