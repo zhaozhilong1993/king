@@ -16,7 +16,7 @@
 
 This does the work of actually implementing the API calls made by the user.
 Normal communications is done via the king API which then calls into this
-engine.
+server.
 """
 import eventlet
 import oslo_i18n as i18n
@@ -35,25 +35,25 @@ from oslo_service import service
 eventlet.monkey_patch()
 i18n.enable_lazy()
 
-LOG = logging.getLogger('king.engine')
+LOG = logging.getLogger('king.server')
 
 
 def main():
-    # init engine
+    # init server
     logging.register_options(cfg.CONF)
-    cfg.CONF(project='king', prog='king-engine',
+    cfg.CONF(project='king', prog='king-server',
              version=version.version_info.version_string())
-    logging.setup(cfg.CONF, 'king-engine')
+    logging.setup(cfg.CONF, 'king-server')
     logging.set_defaults()
     messaging.setup()
 
     config.startup_sanity_check()
 
-    from king.server import service as engine  # noqa
+    from king.server import service as server  # noqa
 
-    profiler.setup('king-engine', cfg.CONF.host)
+    profiler.setup('king-server', cfg.CONF.host)
     gmr.TextGuruMeditation.setup_autorun(version)
-    srv = engine.EngineService(cfg.CONF.host, rpc_api.ENGINE_TOPIC)
+    srv = server.EngineService(cfg.CONF.host, rpc_api.SERVER_TOPIC)
     workers = cfg.CONF.num_engine_workers
     if not workers:
         workers = max(4, processutils.get_worker_count())

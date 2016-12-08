@@ -53,11 +53,10 @@ def main():
 
     profiler.setup('king-account', cfg.CONF.host)
     gmr.TextGuruMeditation.setup_autorun(version)
-    srv = account.AccountService(cfg.CONF.host, rpc_api.ENGINE_TOPIC)
+    srv = account.AccountService(cfg.CONF.host, rpc_api.ACCOUNT_TOPIC)
     workers = cfg.CONF.num_account_workers
     if not workers:
         workers = max(1, processutils.get_worker_count())
-
     launcher = service.launch(cfg.CONF, srv, workers=workers)
 
     launcher.wait()

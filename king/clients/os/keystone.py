@@ -15,7 +15,6 @@ from keystoneclient.v3 import client as kc
 from oslo_log import log as logging
 
 from king.common import exception
-from king.common.i18n import _LI
 from king.clients import client_plugin
 
 LOG = logging.getLogger(__name__)
@@ -48,14 +47,15 @@ class BaseKeystone(client_plugin.ClientPlugin):
     def get_payer_id(self, project_id):
         kc = self.authenticated_client()
         payer_role = kc.roles.list(name=PAY_ROLE_NAME)
+        LOG.debug("Search the payer of project: %s" % project_id)
 
         if not payer_role:
-            LOG.error(_LI("Keystone Role: %s Not found." % PAY_ROLE_NAME))
+            LOG.error("Keystone Role: %s Not found." % PAY_ROLE_NAME)
             raise exception.RolePayerNotFound()
 
         payer = kc.role_assignments.list(project=project_id,
                                          role=payer_role[0])
         if not payer:
-            LOG.error(_LI("Project: %s Not found a payer." % project_id))
+            LOG.error("Project: %s Not found a payer." % project_id)
             raise exception.ProjectPayerNotFound()
         return payer[0].user['id']

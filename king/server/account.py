@@ -199,7 +199,7 @@ class AccountListener(service.Service):
         super(AccountListener, self).start()
         self.target = messaging.Target(
             server=self.engine_id,
-            topic=rpc_api.LISTENER_TOPIC)
+            topic=rpc_api.ACCOUNT_LISTENER_TOPIC)
         server = rpc_messaging.get_rpc_server(self.target, self)
         server.start()
 
@@ -240,7 +240,7 @@ class AccountService(service.Service):
 
         self.host = host
         self.topic = topic
-        self.process = 'king-server'
+        self.process = 'king-account'
         self.hostname = socket.gethostname()
 
         # The following are initialized here, but assigned in start() which
@@ -357,10 +357,10 @@ class AccountService(service.Service):
 
     @context.request_context
     def pay_money(self, cnxt, project_id, pay_money):
+        LOG.debug(_LI("Project %s should pay %s" % (project_id, pay_money)))
         user_id = keystone(cnxt).get_payer_id(project_id)
-        account = self.account.get(cnxt, user_id)
-        self.account.pay(None, account.id, pay_money)
-        LOG.debug(_LI("Pay: Account %s pay %s" % (account.id, pay_money)))
+        self.account.pay(None, user_id, pay_money)
+        LOG.debug(_LI("Pay: User %s have paid %s" % (user_id, pay_money)))
 
     def service_manage_report(self):
         cnxt = context.get_admin_context()

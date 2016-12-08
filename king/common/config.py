@@ -42,6 +42,7 @@ service_opts = [
                default="RegionOne",
                help=_('Default region name used to get services endpoints.')),
     cfg.IntOpt('num_engine_workers',
+               default=1,
                help=_('Number of king-engine processes to fork and run.'))]
 
 account_opts = [
@@ -49,6 +50,7 @@ account_opts = [
                default=60,
                help=_('Seconds between running periodic tasks.')),
     cfg.IntOpt('num_account_workers',
+               default=1,
                help=_('Number of king-engine processes to fork and run.'))]
 
 

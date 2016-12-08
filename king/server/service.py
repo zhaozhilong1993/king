@@ -21,7 +21,7 @@ import uuid
 from apscheduler.schedulers.blocking import BlockingScheduler
 from king.common import context
 from king.rpc import api as rpc_api
-from king.rpc import client as rpc_client
+from king.rpc import account_client as account_rpc_client
 from king.objects import services as services_object
 from king.objects import account as account_object
 from king.objects import order as order_object
@@ -200,7 +200,7 @@ class EngineListener(service.Service):
         super(EngineListener, self).start()
         self.target = messaging.Target(
             server=self.engine_id,
-            topic=rpc_api.LISTENER_TOPIC)
+            topic=rpc_api.SERVER_LISTENER_TOPIC)
         server = rpc_messaging.get_rpc_server(self.target, self)
         server.start()
 
@@ -238,7 +238,6 @@ class EngineService(service.Service):
 
     def __init__(self, host, topic):
         super(EngineService, self).__init__()
-
         self.host = host
         self.topic = topic
         self.process = 'king-server'
@@ -255,7 +254,7 @@ class EngineService(service.Service):
         self.service_id = None
         self.manage_thread_grp = None
         self._rpc_server = None
-        self.rpc_client = rpc_client.EngineClient()
+        self.account_rpc_client = account_rpc_client.AccountClient()
         self.scheduler = BlockingScheduler()
         self.order = order_object.Order()
         self.price = price_object.Price()
@@ -323,6 +322,7 @@ class EngineService(service.Service):
         for order in self._from_db_get_all_order():
             self._check_order_status(order)
             self._check_order_deduction(order)
+            self.cron_task(order)
             self.scheduler.add_job(func=self.cron_task,
                                    args=(order,),
                                    trigger='cron',
@@ -339,9 +339,9 @@ class EngineService(service.Service):
     def cron_task(self, order):
         LOG.debug("Deduction task of %s Running." % order.id)
         pay_money = self.count_pay(order)
-        self.rpc_client.account_pay_money(self.context,
-                                          order.project_id,
-                                          pay_money)
+        self.account_rpc_client.account_pay_money(self.context,
+                                                  order.project_id,
+                                                  pay_money)
 
     def _stop_rpc_server(self):
         # Stop rpc connection at first for preventing new requests

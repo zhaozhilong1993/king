@@ -18,7 +18,7 @@ from king.common import messaging
 from king.rpc import api as rpc_api
 
 
-class EngineClient(object):
+class AccountClient(object):
     """Client side of the heat engine rpc API.
 
     API version history::
@@ -30,7 +30,7 @@ class EngineClient(object):
 
     def __init__(self):
         self._client = messaging.get_rpc_client(
-            topic=rpc_api.ENGINE_TOPIC,
+            topic=rpc_api.ACCOUNT_TOPIC,
             version=self.BASE_RPC_API_VERSION)
 
     @staticmethod
