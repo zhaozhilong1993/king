@@ -18,7 +18,8 @@ import oslo_messaging as messaging
 import socket
 import six
 import uuid
-from apscheduler.schedulers.blocking import BlockingScheduler
+
+from apscheduler.schedulers import background
 from king.common import context
 from king.rpc import api as rpc_api
 from king.rpc import account_client as account_rpc_client
@@ -26,6 +27,12 @@ from king.objects import services as services_object
 from king.objects import account as account_object
 from king.objects import order as order_object
 from king.objects import price as price_object
+
+from king.clients.os import cinder
+from king.clients.os import nova
+from king.clients.os import glance
+from king.clients.os import neutron
+
 from king.common.i18n import _LE
 from king.common.i18n import _LI
 from king.common import messaging as rpc_messaging
@@ -40,6 +47,14 @@ from osprofiler import profiler
 
 
 LOG = logging.getLogger(__name__)
+
+RESOURCE_CLIENT = {
+    'disk': cinder.BaseCinder(context.RequestContext()),
+    'image': glance.BaseGlance(context.RequestContext()),
+    'flavor': nova.BaseNova(context.RequestContext()),
+    'instance': nova.BaseNova(context.RequestContext()),
+    'floating-ip': neutron.BaseNeutron(context.RequestContext()),
+}
 
 
 class ThreadGroupManager(object):
@@ -255,7 +270,14 @@ class EngineService(service.Service):
         self.manage_thread_grp = None
         self._rpc_server = None
         self.account_rpc_client = account_rpc_client.AccountClient()
-        self.scheduler = BlockingScheduler()
+
+        job_defaults = {
+            'misfire_grace_time': 6048000,
+            'coalesce': False,
+            'max_instances': 24,
+        }
+
+        self.scheduler = background.BackgroundScheduler(job_defaults=job_defaults)
         self.order = order_object.Order()
         self.price = price_object.Price()
         self.account = account_object.Account()
@@ -304,14 +326,96 @@ class EngineService(service.Service):
         # status of that resource, like :
         # self.manage_thread_grp.add_thread(self.reset_stack_status)
 
+        self.scheduler.start()
         self.inition_cron_task()
         super(EngineService, self).start()
 
-    def _check_order_status(self, order):
-        pass
+    def _check_runnig_order_status(self, order):
+        try:
+           os_client = RESOURCE_CLIENT[order.order_type]
+        except Exception as ex:
+           Log.error("Non Found order type: %s" % order_type)
+           return False
 
-    def _check_order_deduction(self, order):
-        pass
+        if order.order_type == 'disk':
+           res = os_client.volume_get(order.resource_id)
+
+        elif order.order_type == 'instance':
+           res = os_client.get_server(order.resource_id)
+           if res and res.status == 'SHUTOFF':
+                 return  self.order.update_status(self.context, order.id, 'STOP')
+           if res and res.status == 'ERROR':
+                 return  self.order.update_status(self.context, order.id, 'STOP')
+
+        elif order.order_type == 'floating_ip':
+           res = os_client.get_flavor(order.resource_id)
+        else :
+           LOG.error("Error type of order: %s" % order.id)
+
+        if res is None:
+           return self.order.update_status(self.context, order.id, 'DELETE')
+        return order
+
+    def _check_stop_order_status(self, order):
+        try:
+           os_client = RESOURCE_CLIENT[order.order_type]
+        except Exception as ex:
+           Log.error("Non Found order type: %s" % order_type)
+           return False
+
+        if order.order_type == 'disk':
+           res = os_client.volume_get(order.resource_id)
+
+        elif order.order_type == 'instance':
+           res = os_client.get_server(order.resource_id)
+           if res and res.status == 'RUNNING':
+                 return  self.order.update_status(self.context, order.id, 'RUNNING')
+
+        elif order.order_type == 'floating_ip':
+           res = os_client.get_flavor(order.resource_id)
+        else :
+           LOG.error("Error type of order: %s" % order.id)
+
+        if res is None:
+           return self.order.update_status(self.context, order.id, 'DELETE')
+        return order
+
+    def _check_delete_order_status(self, order):
+        try:
+           os_client = RESOURCE_CLIENT[order.order_type]
+        except Exception as ex:
+           Log.error("Non Found order type: %s" % order_type)
+           return False
+
+        if order.order_type == 'disk':
+           res = os_client.volume_get(order.resource_id)
+
+        elif order.order_type == 'instance':
+           res = os_client.get_server(order.resource_id)
+           if res and res.status == 'RUNNING':
+                 return  self.order.update_status(self.context, order.id, 'RUNNING')
+
+        elif order.order_type == 'floating_ip':
+           res = os_client.get_flavor(order.resource_id)
+        else :
+           LOG.error("Error type of order: %s" % order.id)
+
+        if res:
+           return self.order.update_status(self.context, order.id, 'RUNNING')
+        return order
+
+    def _check_order_status(self, order):
+        LOG.debug("Interval: %s. Running Now." % self.deduction_interval)
+
+        if order.order_status == 'RUNNING':
+           return self._check_runnig_order_status(order)
+        elif order.order_status == 'STOP':
+           return self._check_stop_order_status(order)
+        elif order.order_status == 'DELETE':
+           return self._check_delete_order_status(order)
+        else:
+           LOG.error("Error status of order: %s" % order.id)
+           return False
 
     def _from_db_get_all_order(self):
         return self.order.get_all(None)
@@ -320,16 +424,17 @@ class EngineService(service.Service):
         LOG.debug("Interval: %s. Running Now." % self.deduction_interval)
 
         for order in self._from_db_get_all_order():
-            self._check_order_status(order)
-            self._check_order_deduction(order)
-            self.cron_task(order)
-            self.scheduler.add_job(func=self.cron_task,
-                                   args=(order,),
-                                   trigger='cron',
-                                   second='*/%s' % self.deduction_interval,
-                                   hour="*")
+            order_check = self._check_order_status(order)
+            if not order_check:
+               continue
+            if not order_check.order_status == 'RUNNING':
+               continue
+            self.cron_task(order_check)
+            self.scheduler.add_job(self.cron_task,
+                                   'interval',
+                                   args=(order_check,),
+                                   minutes= self.deduction_interval)
             LOG.debug("Deduction task of order: %s is Ready." % order.id)
-        self.scheduler.start()
 
     def count_pay(self, order):
         unit_price = self.price.get_by_id(None, order.price_id).price_num
@@ -394,6 +499,23 @@ class EngineService(service.Service):
                          for srv in services_object.Service.get_all(cnxt)]
         result['services'] = services_list
         return result
+
+    @context.request_context
+    def cron_create(self, cnxt, order_id):
+        order = self.order.get(self.context, order_id=order_id)
+        order_check = self._check_order_status(order)
+        if not order_check:
+           LOG.debug("Order check False :%s" % order.id)
+           return False
+        if not order_check.order_status == 'RUNNING':
+           LOG.debug("Order status is Not RUNNING: %s" % order.id)
+           return False
+        self.cron_task(order_check)
+        self.scheduler.add_job(self.cron_task,
+                               'interval',
+                               args=(order_check,),
+                               minutes= self.deduction_interval)
+        LOG.debug("Deduction task of order: %s is Ready." % order.id)
 
     def service_manage_report(self):
         cnxt = context.get_admin_context()
