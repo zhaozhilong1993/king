@@ -66,6 +66,10 @@ def service_get_all_by_args(context, host, process, hostname):
     return IMPL.service_get_all_by_args(context, host, process, hostname)
 
 
+def order_get(context, resource_id=None, order_id=None):
+    return IMPL.order_get(context, resource_id=resource_id, order_id=order_id)
+
+
 def order_get_all(context):
     return IMPL.order_get_all(context)
 
@@ -74,8 +78,8 @@ def order_create(context, value):
     return IMPL.order_create(context, value)
 
 
-def order_update(context, value):
-    return IMPL.order_update(context, value)
+def order_update_status(context, order_id, status):
+    return IMPL.order_update_status(context, order_id, status)
 
 
 def price_create(context, value):

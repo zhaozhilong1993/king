@@ -29,7 +29,6 @@ from king.common.i18n import _LE
 from king.common.i18n import _LI
 from king.common import messaging as rpc_messaging
 from king.common import policy
-from king.common import service_utils
 from oslo_config import cfg
 from oslo_log import log as logging
 from oslo_service import service
@@ -346,14 +345,6 @@ class AccountService(service.Service):
     def reset(self):
         super(AccountService, self).reset()
         logging.setup(cfg.CONF, 'king')
-
-    @context.request_context
-    def list_services(self, cnxt):
-        result = {}
-        services_list = [service_utils.format_service(srv)
-                         for srv in services_object.Service.get_all(cnxt)]
-        result['services'] = services_list
-        return result
 
     @context.request_context
     def pay_money(self, cnxt, project_id, order_id, pay_money):

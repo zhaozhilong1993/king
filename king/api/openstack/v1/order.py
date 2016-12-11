@@ -25,6 +25,7 @@ from king.common.i18n import _
 
 from king.objects.order import Order as order_object
 
+from king.rpc import server_client as server_rpc_client
 from oslo_log import log as logging
 
 LOG = logging.getLogger(__name__)
@@ -40,6 +41,7 @@ class OrderController(object):
 
     def __init__(self, options):
         self.options = options
+        self.server_client = server_rpc_client.ServerClient()
 
     @util.policy_enforce
     def list(self, req):
@@ -77,6 +79,7 @@ class OrderController(object):
                     raise exc.HTTPBadRequest(six.text_type(msg))
             res = service_utils.to_dict(order_object.create(req.context,
                                                             body['order']))
+            self.server_client.cron_create(req.context, res['id'])
             return res
         else:
             msg = _("Post data error: key order not found")

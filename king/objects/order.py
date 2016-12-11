@@ -61,7 +61,22 @@ class Order(
             db_api.order_create(context, values))
 
     @classmethod
-    def get_all(cls, context):
+    def get(cls, context, resource_id=None, order_id=None):
+        return cls._from_db_object(
+            context,
+            cls(),
+            db_api.order_get(context,
+                             resource_id=resource_id,
+                             order_id=order_id))
+
+    @classmethod
+    def get_all(cls, context, status=None):
         return cls._from_db_objects(
             context,
             db_api.order_get_all(context))
+
+    @classmethod
+    def update_status(cls, context, order_id, status):
+        return cls._from_db_object(
+            context,
+            db_api.order_update_status(context, order_id, status))

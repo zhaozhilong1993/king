@@ -277,7 +277,9 @@ class EngineService(service.Service):
             'max_instances': 24,
         }
 
-        self.scheduler = background.BackgroundScheduler(job_defaults=job_defaults)
+        self.scheduler = background.BackgroundScheduler(
+            job_defaults=job_defaults
+        )
         self.order = order_object.Order()
         self.price = price_object.Price()
         self.account = account_object.Account()
@@ -332,90 +334,100 @@ class EngineService(service.Service):
 
     def _check_runnig_order_status(self, order):
         try:
-           os_client = RESOURCE_CLIENT[order.order_type]
+            os_client = RESOURCE_CLIENT[order.order_type]
         except Exception as ex:
-           Log.error("Non Found order type: %s" % order_type)
-           return False
+            LOG.error(ex)
+            return False
 
         if order.order_type == 'disk':
-           res = os_client.volume_get(order.resource_id)
+            res = os_client.volume_get(order.resource_id)
 
         elif order.order_type == 'instance':
-           res = os_client.get_server(order.resource_id)
-           if res and res.status == 'SHUTOFF':
-                 return  self.order.update_status(self.context, order.id, 'STOP')
-           if res and res.status == 'ERROR':
-                 return  self.order.update_status(self.context, order.id, 'STOP')
+            res = os_client.get_server(order.resource_id)
+            if res and res.status == 'SHUTOFF':
+                return self.order.update_status(self.context,
+                                                order.id,
+                                                'STOP')
+            if res and res.status == 'ERROR':
+                return self.order.update_status(self.context,
+                                                order.id,
+                                                'STOP')
 
         elif order.order_type == 'floating_ip':
-           res = os_client.get_flavor(order.resource_id)
-        else :
-           LOG.error("Error type of order: %s" % order.id)
+            res = os_client.get_flavor(order.resource_id)
+        else:
+            LOG.error("Error type of order: %s" % order.id)
 
         if res is None:
-           return self.order.update_status(self.context, order.id, 'DELETE')
+            return self.order.update_status(self.context,
+                                            order.id,
+                                            'DELETE')
         return order
 
     def _check_stop_order_status(self, order):
         try:
-           os_client = RESOURCE_CLIENT[order.order_type]
+            os_client = RESOURCE_CLIENT[order.order_type]
         except Exception as ex:
-           Log.error("Non Found order type: %s" % order_type)
-           return False
+            LOG.error(ex)
+            return False
 
         if order.order_type == 'disk':
-           res = os_client.volume_get(order.resource_id)
+            res = os_client.volume_get(order.resource_id)
 
         elif order.order_type == 'instance':
-           res = os_client.get_server(order.resource_id)
-           if res and res.status == 'RUNNING':
-                 return  self.order.update_status(self.context, order.id, 'RUNNING')
+            res = os_client.get_server(order.resource_id)
+            if res and res.status == 'RUNNING':
+                return self.order.update_status(self.context,
+                                                order.id,
+                                                'RUNNING')
 
         elif order.order_type == 'floating_ip':
-           res = os_client.get_flavor(order.resource_id)
-        else :
-           LOG.error("Error type of order: %s" % order.id)
+            res = os_client.get_flavor(order.resource_id)
+        else:
+            LOG.error("Error type of order: %s" % order.id)
 
         if res is None:
-           return self.order.update_status(self.context, order.id, 'DELETE')
+            return self.order.update_status(self.context, order.id, 'DELETE')
         return order
 
     def _check_delete_order_status(self, order):
         try:
-           os_client = RESOURCE_CLIENT[order.order_type]
+            os_client = RESOURCE_CLIENT[order.order_type]
         except Exception as ex:
-           Log.error("Non Found order type: %s" % order_type)
-           return False
+            LOG.error(ex)
+            return False
 
         if order.order_type == 'disk':
-           res = os_client.volume_get(order.resource_id)
+            res = os_client.volume_get(order.resource_id)
 
         elif order.order_type == 'instance':
-           res = os_client.get_server(order.resource_id)
-           if res and res.status == 'RUNNING':
-                 return  self.order.update_status(self.context, order.id, 'RUNNING')
+            res = os_client.get_server(order.resource_id)
+            if res and res.status == 'RUNNING':
+                return self.order.update_status(self.context,
+                                                order.id,
+                                                'RUNNING')
 
         elif order.order_type == 'floating_ip':
-           res = os_client.get_flavor(order.resource_id)
-        else :
-           LOG.error("Error type of order: %s" % order.id)
+            res = os_client.get_flavor(order.resource_id)
+        else:
+            LOG.error("Error type of order: %s" % order.id)
 
         if res:
-           return self.order.update_status(self.context, order.id, 'RUNNING')
+            return self.order.update_status(self.context, order.id, 'RUNNING')
         return order
 
     def _check_order_status(self, order):
         LOG.debug("Interval: %s. Running Now." % self.deduction_interval)
 
         if order.order_status == 'RUNNING':
-           return self._check_runnig_order_status(order)
+            return self._check_runnig_order_status(order)
         elif order.order_status == 'STOP':
-           return self._check_stop_order_status(order)
+            return self._check_stop_order_status(order)
         elif order.order_status == 'DELETE':
-           return self._check_delete_order_status(order)
+            return self._check_delete_order_status(order)
         else:
-           LOG.error("Error status of order: %s" % order.id)
-           return False
+            LOG.error("Error status of order: %s" % order.id)
+            return False
 
     def _from_db_get_all_order(self):
         return self.order.get_all(None)
@@ -426,14 +438,14 @@ class EngineService(service.Service):
         for order in self._from_db_get_all_order():
             order_check = self._check_order_status(order)
             if not order_check:
-               continue
+                continue
             if not order_check.order_status == 'RUNNING':
-               continue
+                continue
             self.cron_task(order_check)
             self.scheduler.add_job(self.cron_task,
                                    'interval',
                                    args=(order_check,),
-                                   minutes= self.deduction_interval)
+                                   minutes=self.deduction_interval)
             LOG.debug("Deduction task of order: %s is Ready." % order.id)
 
     def count_pay(self, order):
@@ -505,16 +517,16 @@ class EngineService(service.Service):
         order = self.order.get(self.context, order_id=order_id)
         order_check = self._check_order_status(order)
         if not order_check:
-           LOG.debug("Order check False :%s" % order.id)
-           return False
+            LOG.debug("Order check False :%s" % order.id)
+            return False
         if not order_check.order_status == 'RUNNING':
-           LOG.debug("Order status is Not RUNNING: %s" % order.id)
-           return False
+            LOG.debug("Order status is Not RUNNING: %s" % order.id)
+            return False
         self.cron_task(order_check)
         self.scheduler.add_job(self.cron_task,
                                'interval',
                                args=(order_check,),
-                               minutes= self.deduction_interval)
+                               minutes=self.deduction_interval)
         LOG.debug("Deduction task of order: %s is Ready." % order.id)
 
     def service_manage_report(self):

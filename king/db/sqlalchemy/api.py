@@ -138,20 +138,29 @@ def order_get_all(context):
             filter_by(deleted_at=None).all())
 
 
-def order_get(context, resource_id, order_id=None):
+def order_get(context, resource_id=None, order_id=None):
     query = model_query(context, models.Order)
     if order_id:
         res = query.get(order_id)
-    else:
+        if res is None:
+            LOG.error(_LE('resouce_id : %s do not have a order' % resource_id))
+            raise exception.EntityNotFound(entity='Order', name=resource_id)
+        return res
+    elif resource_id:
         res = query.get(resource_id)
-    if res is None:
-        LOG.error(_LE('resouce_id : %s do not have a order' % resource_id))
-        raise exception.EntityNotFound(entity='Order', name=resource_id)
-    return res
+        if res is None:
+            LOG.error(_LE('resouce_id : %s do not have a order' % resource_id))
+            raise exception.EntityNotFound(entity='Order', name=resource_id)
+        return res
+    else:
+        LOG.error("resource_id or order_id is necessary.")
+        raise exception.EntityNotFound(entity='Order',
+                                       name="resource_id or order_id")
 
 
 def order_create(context, value):
     value['created_at'] = timeutils.utcnow()
+    value['order_status'] = "RUNNING"
     session = get_session()
     order = models.Order()
     order.update(value)
@@ -159,10 +168,10 @@ def order_create(context, value):
     return order
 
 
-def update_order(context, value):
-    resource_id = value['resource_id']
-    value.update({'updated_at': timeutils.utcnow()})
-    order = order_get(context, resource_id)
+def order_update_status(context, order_id, status):
+    order = order_get(context, order_id)
+    value = {'order_status': status,
+             'updated_at': timeutils.utcnow()}
     order.update(value)
     order.save(_session(context))
     return order
@@ -250,3 +259,9 @@ def action_record(context, data):
     action_record.update(data)
     action_record.save(session)
     return action_record
+
+
+def action_record_get(context, resource_id, start=None, end=None):
+    query = model_query(context, models.Action_record)
+    res = query.filter_by(resource_id=resource_id)
+    return res

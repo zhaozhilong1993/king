@@ -25,19 +25,6 @@ CLIENT_VERSION = '3'
 
 
 class BaseKeystone(client_plugin.ClientPlugin):
-    service_types = [IDENTITY] = ['identity']
-
-    def get_keystone_url(self):
-        keystone_url = self._get_client_option(CLIENT_NAME, 'auth_uri')
-        if keystone_url:
-            tenant_id = self.context.tenant_id
-            keystone_url = keystone_url % {'tenant_id': tenant_id}
-        else:
-            endpoint_type = self._get_client_option(CLIENT_NAME,
-                                                    'endpoint_type')
-            keystone_url = self.url_for(service_type=self.IDENTITY,
-                                        endpoint_type=endpoint_type)
-        return keystone_url
 
     def authenticated_client(self):
         # get keystone endpoint

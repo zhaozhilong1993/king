@@ -13,13 +13,13 @@
 #    License for the specific language governing permissions and limitations
 #    under the License.
 
-"""Client side of the king account RPC API."""
+"""Client side of the king server RPC API."""
 from king.common import messaging
 from king.rpc import api as rpc_api
 
 
-class AccountClient(object):
-    """Client side of the king account rpc API.
+class ServerClient(object):
+    """Client side of the king server rpc API.
 
     API version history::
 
@@ -30,7 +30,7 @@ class AccountClient(object):
 
     def __init__(self):
         self._client = messaging.get_rpc_client(
-            topic=rpc_api.ACCOUNT_TOPIC,
+            topic=rpc_api.SERVER_TOPIC,
             version=self.BASE_RPC_API_VERSION)
 
     @staticmethod
@@ -58,13 +58,11 @@ class AccountClient(object):
             client = self._client
         return client.cast(ctxt, method, **kwargs)
 
-    def account_pay_money(self, ctxt, project_id, order_id, pay_money):
-        """Pay the bill
+    def cron_create(self, ctxt, order_id):
+        """Add cron task for order
         :param ctxt: RPC context.
         """
         return self.call(ctxt,
-                         self.make_msg('pay_money',
-                                       project_id=project_id,
-                                       order_id=order_id,
-                                       pay_money=pay_money),
+                         self.make_msg('cron_create',
+                                       order_id=order_id),
                          version='1.0')
