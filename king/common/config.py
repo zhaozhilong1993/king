@@ -161,14 +161,24 @@ profiler_opts = [
 
 auth_password_group = cfg.OptGroup('auth_password')
 auth_password_opts = [
-    cfg.BoolOpt('multi_cloud',
-                default=False,
-                help=_('Allow orchestration of multiple clouds.')),
-    cfg.ListOpt('allowed_auth_uris',
-                default=[],
-                help=_('Allowed keystone endpoints for auth_uri when '
-                       'multi_cloud is enabled. At least one endpoint needs '
-                       'to be specified.'))]
+    cfg.StrOpt('auth_url',
+               default='http://10.0.200.41:5000/v3',
+               help=_('Auth url for keystone')),
+    cfg.StrOpt('username',
+               default='admin',
+               help=_('Keystone admin user name')),
+    cfg.StrOpt('password',
+               default='ccbce9a165cb47c40242bc4c',
+               help=_('Keystone admin user password')),
+    cfg.StrOpt('project_name',
+               default='openstack',
+               help=_('Keystone admin user project name')),
+    cfg.StrOpt('user_domain_id',
+               default='default',
+               help=_('Keystone admin user domain')),
+    cfg.StrOpt('project_domain_id',
+               default='default',
+               help=_('Keystone admin user domain id'))]
 
 
 # these options define baseline defaults that apply to all clients

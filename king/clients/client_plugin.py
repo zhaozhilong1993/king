@@ -19,6 +19,8 @@ from keystoneauth1 import session
 from keystoneauth1.identity import v3
 from king.common import config
 
+from oslo_config import cfg
+
 
 @six.add_metaclass(abc.ABCMeta)
 class ClientPlugin(object):
@@ -30,10 +32,11 @@ class ClientPlugin(object):
         self._keystone_session_obj = None
         self.king = None
         self.client = client
-        auth = v3.Password(auth_url="http://10.0.200.41:5000/v3",
-                           username="admin",
-                           password="ccbce9a165cb47c40242bc4c",
-                           project_name="openstack",
-                           user_domain_id="default",
-                           project_domain_id="default")
+        self.auth = cfg.CONF.auth_password
+        auth = v3.Password(auth_url=self.auth.auth_url,
+                           username=self.auth.username,
+                           password=self.auth.password,
+                           project_name=self.auth.project_name,
+                           user_domain_id=self.auth.user_domain_id,
+                           project_domain_id=self.auth.project_domain_id)
         self.sess = session.Session(auth=auth)
